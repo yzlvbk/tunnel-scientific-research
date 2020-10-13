@@ -1,12 +1,27 @@
 import React, { Component } from 'react'
+import style from './Test.module.less'
+import { Button } from 'antd';
 
-interface testState {
+interface IProps {
+  name: string,
+  age: number
+}
+
+interface TestState {
   count: number,
   str: string
 }
 
-export default class Test extends Component {
-  public state: testState = {
+export default class Test extends Component<IProps, TestState> {
+  // constructor(props: IProps) {
+  //   super(props);
+  //   this.state = {
+  //     count: 0,
+  //     str: 'str'
+  //   }
+  // }
+
+  readonly state: Readonly<TestState> = {
     count: 0,
     str: 'str'
   }
@@ -16,11 +31,14 @@ export default class Test extends Component {
   }
 
   public render() {
+    console.log(this)
+    const { count } = this.state
+
     return (
       <div>
         <h1>test</h1>
-        <p>count: {this.state.count}</p>
-        <button onClick={(e) => this.click(2)}>add</button>
+        <p className={style.color}>count: {count}</p>
+        <Button type="primary" onClick={(e) => this.click(2)}>add</Button>
       </div>
     )
   }
