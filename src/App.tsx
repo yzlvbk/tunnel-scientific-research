@@ -1,10 +1,12 @@
 import React from 'react';
-import Test from './pages/Test'
+// import Test from './pages/Test'
+import Home from './pages/Home/Home'
 
 function App() {
   return (
     <div className="App">
-      <Test name="tom" age={2} />
+      <Home />
+      {/* <Test name="tom" age={2} /> */}
     </div>
   );
 }
