@@ -7,27 +7,49 @@ import SideMenu from './components/SideMenu/SideMenu'
 import {
   MenuFoldOutlined
 } from '@ant-design/icons'
+import { debounce } from '../../utils/debounce'
 import SubSideMonitor from '../SubsideMonitor/SubSideMonitor'
 import SubsideHistory from '../SubsideHistory/SubsideHistory'
 const { Header, Sider, Content } = Layout
 
 
 export default class Home extends Component<RouteComponentProps> {
-
-  componentDidMount() {
-    // home页面，path='/'时，重定向至 /subsideMonitor
-    if (this.props.location.pathname === '/') this.props.history.push('/subsideMonitor')
-  }
-  public state = {
-    collapsed: false  // 侧边栏是否折叠
-  }
-
   // 切换折叠按钮
   public toggle = () => {
     this.setState({
       collapsed: !this.state.collapsed
     })
   }
+
+  // 根据窗口变化，是否折叠导航栏
+  public handleResize = (e: any) => {
+    console.log(window.innerWidth)
+    if (window.innerWidth < 960) {
+      this.setState({
+        collapsed: true
+      })
+    } else {
+      this.setState({
+        collapsed: false
+      })
+    }
+  }
+
+
+
+  componentDidMount() {
+    // home页面，path='/'时，重定向至 /subsideMonitor
+    if (this.props.location.pathname === '/') this.props.history.push('/subsideMonitor')
+
+    //监听窗口大小改变
+    // eslint-disable-next-line no-restricted-globals
+    window.addEventListener('resize', debounce(this.handleResize, 100))
+  }
+  public state = {
+    collapsed: false  // 侧边栏是否折叠
+  }
+
+
 
   render() {
     return (
@@ -41,9 +63,9 @@ export default class Home extends Component<RouteComponentProps> {
           </div>
         </Sider>
 
-        <Layout>
+        <Layout style={{ position: 'relative' }}>
           {/* 头部区域 */}
-          <Header style={{ backgroundColor: '#fff', padding: 0, height: 48 }}></Header>
+          <Header style={{ position: 'fixed', top: 0, backgroundColor: '#fff', padding: 0, width: '100%', height: 48 }}></Header>
 
           {/* 内容区域 */}
           <Content className={home.content}>
