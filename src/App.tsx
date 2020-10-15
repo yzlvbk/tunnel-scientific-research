@@ -1,14 +1,17 @@
 import React from 'react';
-// import Test from './pages/Test'
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
 import Home from './pages/Home/Home'
 
 function App() {
   return (
     <div className="App">
-      <Home />
-      {/* <Test name="tom" age={2} /> */}
+      <Router>
+        <Switch>
+          <Route path='/' component={Home} />
+        </Switch>
+      </Router>
     </div>
-  );
+  )
 }
 
 export default App;

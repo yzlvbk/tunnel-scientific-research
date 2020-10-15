@@ -10,6 +10,7 @@
     "skipLibCheck": true,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
+    "suppressImplicitAnyIndexErrors": true, // 允许string作为索引类型
     "strict": true,
     "forceConsistentCasingInFileNames": true,
     "module": "esnext",

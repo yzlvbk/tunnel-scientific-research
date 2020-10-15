@@ -3,28 +3,31 @@
   height: 100%;
   width: 100%;
 
-  .trigger {
-    font-size: 18px;
-    line-height: 64px;
-    padding: 0 24px;
-    cursor: pointer;
-    transition: color 0.3s;
+  .sider {
+    height: calc(100% - 64px - 40px);
+    margin-top: 64px;
+    overflow-y: auto;
 
-    &:hover {
-      color: #1890ff;
+    .trigger {
+      position: absolute;
+      bottom: 0;
+      font-size: 18px;
+      line-height: 40px;
+      padding: 0 24px;
+      cursor: pointer;
+      transition: color 0.3s;
+      color: #fff;
+
+      &:hover {
+        color: #1890ff;
+      }
     }
   }
 
-  .logo {
-    height: 32px;
-    margin: 16px;
-    color: #eee;
-    font-size: 20px;
-    text-align: center;
 
-  }
 
-  .site-layout .site-layout-background {
-    background: #fff;
+  .content {
+    padding: 24px;
+    // background: #fff;
   }
 }

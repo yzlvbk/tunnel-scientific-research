@@ -1,68 +1,59 @@
 import React, { Component } from 'react'
 import home from './Home.module.less'
-import { Layout, Menu } from 'antd';
+import { Route, Switch } from 'react-router-dom'
+import { RouteComponentProps } from 'react-router-dom'
+import { Layout } from 'antd'
+import SideMenu from './components/SideMenu/SideMenu'
 import {
-  MenuFoldOutlined,
-  UserOutlined,
-  VideoCameraOutlined,
-  UploadOutlined,
-} from '@ant-design/icons';
-const { Header, Sider, Content } = Layout;
+  MenuFoldOutlined
+} from '@ant-design/icons'
+import SubSideMonitor from '../SubsideMonitor/SubSideMonitor'
+import SubsideHistory from '../SubsideHistory/SubsideHistory'
+const { Header, Sider, Content } = Layout
 
-interface Props {
 
-}
-interface State {
+export default class Home extends Component<RouteComponentProps> {
 
-}
+  componentDidMount() {
+    // home页面，path='/'时，重定向至 /subsideMonitor
+    if (this.props.location.pathname === '/') this.props.history.push('/subsideMonitor')
+  }
+  public state = {
+    collapsed: false  // 侧边栏是否折叠
+  }
 
-export default class Home extends Component<Props, State> {
-  state = {
-    collapsed: false,
-  };
-
-  toggle = () => {
+  // 切换折叠按钮
+  public toggle = () => {
     this.setState({
-      collapsed: !this.state.collapsed,
-    });
-  };
+      collapsed: !this.state.collapsed
+    })
+  }
 
   render() {
     return (
       <Layout className={home.home}>
+        {/* 侧边栏 */}
         <Sider trigger={null} collapsible collapsed={this.state.collapsed}>
-          <div className={home.logo}>{!this.state.collapsed && '隧道科研'}</div>
-          {/* 侧边栏导航 */}
-          <Menu theme="dark" mode="inline" defaultSelectedKeys={['1']}>
-            <Menu.Item key="1" icon={<UserOutlined />}>
-              nav 1
-            </Menu.Item>
-            <Menu.Item key="2" icon={<VideoCameraOutlined />}>
-              nav 2
-            </Menu.Item>
-            <Menu.Item key="3" icon={<UploadOutlined />}>
-              nav 3
-            </Menu.Item>
-          </Menu>
-        </Sider>
-        <Layout className={home['site-layout']}>
-
-          <Header className={home['site-layout-background']} style={{ padding: 0 }}>
+          {/* 导航菜单 */}
+          <div className={home.sider}>
+            <SideMenu collapsed={this.state.collapsed} />
             <MenuFoldOutlined className={home.trigger} onClick={this.toggle} />
-          </Header>
+          </div>
+        </Sider>
 
-          <Content
-            className={home['site-layout-background']}
-            style={{
-              margin: '24px 16px',
-              padding: 24,
-              minHeight: 280,
-            }}
-          >
-            Content
+        <Layout>
+          {/* 头部区域 */}
+          <Header style={{ backgroundColor: '#fff', padding: 0, height: 48 }}></Header>
+
+          {/* 内容区域 */}
+          <Content className={home.content}>
+            <Switch>
+              <Route path="/subsideMonitor" component={SubSideMonitor} />
+              <Route path='/SubsideHistory' component={SubsideHistory} />
+            </Switch>
           </Content>
         </Layout>
-      </Layout>
+      </Layout >
     );
   }
 }
