@@ -273,8 +273,6 @@ function buildBack(group: any) {
   group.add(mesh)
 }
 
-
-
 export default class LeveeThreeD extends React.Component<{}> {
   container: any
   warp: any
@@ -347,7 +345,6 @@ export default class LeveeThreeD extends React.Component<{}> {
   }
 
   public initLight = () => {
-    /* 光源设置 */
     // 方向光
     var directionalLight = new THREE.DirectionalLight(0xffffff, 0.5);
     directionalLight.position.set(0, 100, 100);
@@ -369,19 +366,14 @@ export default class LeveeThreeD extends React.Component<{}> {
   }
 
   public initCamera = () => {
-
-    /* 相机设置 */
-    var k = this.containerWidth / this.containerHeight; //窗口宽高比
-    var s = 200; //三维场景显示范围控制系数，系数越大，显示的范围越大
-
-    //创建相机对象
+    const k = this.containerWidth / this.containerHeight
+    const s = 200
     this.camera = new THREE.OrthographicCamera(-s * k, s * k, s, -s, -10000000, 10000000);
     this.camera.position.set(-100, 30, 0); //设置相机位置
     this.camera.lookAt(this.scene.position); //设置相机方向(指向的场景对象)
   }
 
   public initRenderer = () => {
-    /* 创建渲染器对象 */
     var renderer = new THREE.WebGLRenderer();
     // @ts-ignore
     renderer = new THREE.WebGLRenderer({
@@ -390,13 +382,11 @@ export default class LeveeThreeD extends React.Component<{}> {
       // @ts-ignore
       canvas: this.container.querySelector('canvas')
     })
-
-    renderer.setSize(this.containerWidth, this.containerHeight);//设置渲染区域尺寸
-    renderer.setClearColor(0xb9d3ff, 1); //设置背景颜色
-
+    renderer.setSize(this.containerWidth, this.containerHeight)
+    renderer.setClearColor(0xb9d3ff, 1)
     const render = () => {
-      renderer.render(this.scene, this.camera) // 执行渲染操作
-      requestAnimationFrame(render) // 请求再次执行渲染函数render，渲染下一帧
+      renderer.render(this.scene, this.camera)
+      requestAnimationFrame(render)
     }
     render()
     // @ts-ignore
