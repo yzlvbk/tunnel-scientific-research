@@ -14,8 +14,8 @@ lut.setMin(-10);
 
 //  动态整合vertices
 var vertices: any[] = []
-for (let i = 0; i < 120; i++) {
-  const distance = i * 2 - 120
+for (let i = 0; i < 186; i++) {
+  const distance = i * 2 - 186
   vertices.push(new THREE.Vector3(distance, 0, -240))
   vertices.push(new THREE.Vector3(distance, 0, -40))
   vertices.push(new THREE.Vector3(distance, 100, -40))
@@ -126,41 +126,16 @@ function buildTopFaces(vertices: any, group: any) {
 function buildRiverBase(group: any) {
   let geometry = new THREE.Geometry(); //声明一个空几何体对象
 
-  var vertices = [
-    new THREE.Vector3(120, 0, -40),
-    new THREE.Vector3(120, 100, -40), //2
-
-    new THREE.Vector3(55, 0, -40),
-    new THREE.Vector3(55, 100, -40), // 10
-
-    new THREE.Vector3(45, 0, -40),
-    new THREE.Vector3(45, 100, -40),
-
-    new THREE.Vector3(30, 0, -40),
-    new THREE.Vector3(30, 100, -40),
-
-    new THREE.Vector3(0, 0, -40),
-    new THREE.Vector3(0, 100, -40),
-
-    new THREE.Vector3(-15, 0, -40),
-    new THREE.Vector3(-15, 100, -40),
-
-    new THREE.Vector3(-30, 0, -40),
-    new THREE.Vector3(-30, 100, -40),
-
-    new THREE.Vector3(-45, 0, -40),
-    new THREE.Vector3(-45, 100, -40),
-
-    new THREE.Vector3(-55, 0, -40),
-    new THREE.Vector3(-55, 100, -40),
-
-    new THREE.Vector3(-120, 0, -40),
-    new THREE.Vector3(-120, 100, -40),
+  var verticesArry: any = [
+    vertices[1],
+    vertices[2],
+    vertices[vertices.length - 7],
+    vertices[vertices.length - 6]
   ]
   //类型数组创建顶点位置position数据
-  geometry.vertices = vertices
+  geometry.vertices = verticesArry
 
-  const indexArry = computedIndex(vertices.length, 2)
+  const indexArry = computedIndex(verticesArry.length, 2)
   var faces = accordIndexBuildFace(indexArry)
   geometry.faces = faces
 
