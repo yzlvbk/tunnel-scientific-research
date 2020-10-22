@@ -28,17 +28,17 @@ const iconMap = {
 
 class SideMenu extends Component<SideMenuProps> {
   menuNodes: any // 导航菜单
-  openKeys: any // 展开菜单
+  openKeys!: string // 展开菜单
+
   constructor(props: SideMenuProps) {
     super(props)
     this.menuNodes = this.getMenuNodes(menuList)
   }
 
-
   /* 根据menuList的数据数组生成对应的标签数组 */
   public getMenuNodes = (menuList: menu[]) => {
     // 得到当前请求的路由路径
-    const path = this.props.location.pathname
+    const path = this.props.location.pathname === '/' ? '/subsideMonitor' : this.props.location.pathname
 
     return menuList.map((item: menu) => {
       if (!item.children) {
@@ -69,19 +69,16 @@ class SideMenu extends Component<SideMenuProps> {
   }
 
   render() {
-    let path = this.props.location.pathname
+    let path = this.props.location.pathname === '/' ? '/subsideMonitor' : this.props.location.pathname
     const { collapsed } = this.props
 
     return (
       <>
         {/* logo和title */}
-        <Link to='/subsideMonitor'>
-          <div className={SideMenuLess['side-menu']}>
-            <img className={SideMenuLess.logo} src={logo} alt="" />
-            {!collapsed && <span style={{ marginLeft: 10 }}>隧道科研</span>}
-          </div>
-        </Link>
-
+        <div className={SideMenuLess['side-menu']}>
+          <img className={SideMenuLess.logo} src={logo} alt="" />
+          {!collapsed && <span style={{ marginLeft: 10 }}>隧道科研</span>}
+        </div>
 
         {/* 导航菜单 */}
         <Menu theme="dark" mode="inline" defaultOpenKeys={[this.openKeys]} defaultSelectedKeys={[path]}>
