@@ -29,13 +29,9 @@ export default class Home extends Component<RouteComponentProps> {
   // 根据窗口变化，是否折叠导航栏
   public handleResize = () => {
     if (window.innerWidth < 960) {
-      this.setState({
-        collapsed: true
-      })
+      !this.state.collapsed && this.setState({ collapsed: true })
     } else {
-      this.setState({
-        collapsed: false
-      })
+      this.state.collapsed && this.setState({ collapsed: false })
     }
   }
 

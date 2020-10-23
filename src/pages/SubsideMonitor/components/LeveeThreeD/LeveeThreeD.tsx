@@ -9,8 +9,8 @@ var params = {
 };
 var lut = new Lut();
 lut.setColorMap(params.colorMap);
-lut.setMax(10);
-lut.setMin(-10);
+lut.setMax(2);
+lut.setMin(-12);
 
 //  动态整合vertices
 var vertices: any[] = []
@@ -25,14 +25,13 @@ for (let i = 0; i < 186; i++) {
   vertices.push(new THREE.Vector3(distance, 159, -87))
   vertices.push(new THREE.Vector3(distance, 159, -240))
 }
-
 // 4个点生成2个三角形
-function buildTriangle(a: number, b: number, c: number, d: number) {
+const buildTriangle = (a: number, b: number, c: number, d: number) => {
   return [b, a, c, b, d, c]
 }
 
 // 相邻两组点计算索引
-function buildAdjacentIndex(arr1: number[], arr2: number[]) {
+const buildAdjacentIndex = (arr1: number[], arr2: number[]) => {
   let indexArry: number[] = []
   for (let i = 0, x = (arr1.length - 1); i < x; i++) {
     const index = buildTriangle(arr1[i], arr1[i + 1], arr2[i], arr2[i + 1])
@@ -42,7 +41,7 @@ function buildAdjacentIndex(arr1: number[], arr2: number[]) {
 }
 
 // 计算索引 type=8为8个一组，    type=2为2个一组计算top face 
-function computedIndex(num: number, type = 8) {
+const computedIndex = (num: number, type = 8) => {
   const IndexArry = [] // 按照length分成索引数组
   let restleIndexArry: number[] = [] // 最终计算的索引
   // 将索引6进行分组，6个一组
@@ -65,7 +64,7 @@ function computedIndex(num: number, type = 8) {
 }
 
 // 按照索引build face
-function accordIndexBuildFace(indexArry: number[]) {
+const accordIndexBuildFace = (indexArry: number[]) => {
   const faceArry = []
   for (let i = 0, x = indexArry.length; i < x; i += 3) {
     faceArry.push(new THREE.Face3(indexArry[i], indexArry[i + 1], indexArry[i + 2]))
@@ -74,7 +73,7 @@ function accordIndexBuildFace(indexArry: number[]) {
 }
 
 // 绘制大堤顶部
-function buildTopFaces(vertices: any, group: any) {
+const buildTopFaces = (vertices: any, group: any) => {
   let geometry = new THREE.Geometry(); //声明一个空几何体对象
   //类型数组创建顶点位置position数据
   geometry.vertices = vertices
@@ -123,7 +122,7 @@ function buildTopFaces(vertices: any, group: any) {
 }
 
 // 绘制黄河底
-function buildRiverBase(group: any) {
+const buildRiverBase = (group: any) => {
   let geometry = new THREE.Geometry(); //声明一个空几何体对象
 
   var verticesArry: any = [
@@ -157,7 +156,7 @@ function buildRiverBase(group: any) {
 }
 
 // 绘制侧面
-function buildSide(vertices: any, group: any) {
+const buildSide = (vertices: any, group: any) => {
   var geometry = new THREE.Geometry(); //声明一个空几何体对象
   geometry.vertices = vertices
 
@@ -187,7 +186,7 @@ function buildSide(vertices: any, group: any) {
 }
 
 // 绘制正面
-function buildFront(group: any) {
+const buildFront = (group: any) => {
   let geometry = new THREE.Geometry(); //声明一个空几何体对象
   var verticesArry = [
     vertices[0],
@@ -217,7 +216,7 @@ function buildFront(group: any) {
 }
 
 // 绘制后面
-function buildBack(group: any) {
+const buildBack = (group: any) => {
   let geometry = new THREE.Geometry(); //声明一个空几何体对象
 
   var verticesArry = [
@@ -248,22 +247,65 @@ function buildBack(group: any) {
   group.add(mesh)
 }
 
-export default class LeveeThreeD extends React.Component<{}> {
+
+interface ILeveeThreeDProps {
+  leveeTimeTransformValue: any
+}
+export default class LeveeThreeD extends React.Component<ILeveeThreeDProps> {
   container: any
   warp: any
   containerWidth: any
   containerHeight: any
-  scene = new THREE.Scene();
-  group = new THREE.Group();
+  scene: any
+  group: any
+  renderer: any;
   camera: any
 
-  componentDidMount() {
+
+  public componentDidMount() {
     this.container = document.querySelector(`.${style['levee-threeD-warp']}`)
     this.warp = this.container?.getBoundingClientRect()
     this.containerWidth = this.warp!.right - this.warp!.left
     this.containerHeight = this.warp!.bottom - this.warp!.top
     this.initThree();
   }
+
+  public componentDidUpdate() {
+    //  动态整合vertices
+    vertices = []
+    for (let i = 0; i < 186; i++) {
+      const distance = i * 2 - 186
+      vertices.push(new THREE.Vector3(distance, 0, -240))
+      vertices.push(new THREE.Vector3(distance, 0, -40))
+      vertices.push(new THREE.Vector3(distance, 100, -40))
+      vertices.push(new THREE.Vector3(distance, 100, 0))
+      vertices.push(new THREE.Vector3(distance, 121, 0))
+      vertices.push(new THREE.Vector3(distance, 148, -87))
+      vertices.push(new THREE.Vector3(distance, 159, -87))
+      vertices.push(new THREE.Vector3(distance, 159, -240))
+    }
+
+    const { leveeTimeTransformValue } = this.props
+    Object.values(leveeTimeTransformValue).forEach((item: any, index) => {
+      const distance = index * 2 - 186
+      const zoomItem = item / 10
+      if (vertices[(index * 8 + 3)] && vertices[(index * 8 + 4)]) {
+        vertices.splice((index * 8 + 3), 1, (new THREE.Vector3(distance, 100, zoomItem)))
+        vertices.splice((index * 8 + 4), 1, (new THREE.Vector3(distance, 121, zoomItem)))
+      }
+    })
+
+
+    if (this.scene || this.renderer) {
+      this.scene.remove()
+      this.renderer.dispose()
+    }
+    // this.initThree()
+
+
+  }
+
+
 
   public drawLevee = () => {
     // 绘制河底
@@ -349,30 +391,33 @@ export default class LeveeThreeD extends React.Component<{}> {
   }
 
   public initRenderer = () => {
-    var renderer = new THREE.WebGLRenderer();
+    this.renderer = new THREE.WebGLRenderer();
     // @ts-ignore
-    renderer = new THREE.WebGLRenderer({
+    this.renderer = new THREE.WebGLRenderer({
       antialias: true,
       alpha: true,
       // @ts-ignore
       canvas: this.container.querySelector('canvas')
     })
-    renderer.setSize(this.containerWidth, this.containerHeight)
-    renderer.setClearColor(0xb9d3ff, 1)
+    this.renderer.setSize(this.containerWidth, this.containerHeight)
+    this.renderer.setClearColor(0xb9d3ff, 1)
     const render = () => {
-      renderer.render(this.scene, this.camera)
+      this.renderer.render(this.scene, this.camera)
       requestAnimationFrame(render)
     }
     render()
     // @ts-ignore
-    new OrbitControls(this.camera, renderer.domElement)
+    new OrbitControls(this.camera, this.renderer.domElement)
     // 取消添加OrbitControls时的边框线
-    renderer.domElement.removeAttribute('tabindex')
+    this.renderer.domElement.removeAttribute('tabindex')
   }
 
   public initThree = () => {
-    this.group.translateZ(50);
+    this.scene = new THREE.Scene();
+    this.group = new THREE.Group();
     this.group.translateY(120);
+    this.group.rotateZ(-20 * Math.PI / 180);
+    this.group.rotateY(90 * Math.PI / 180);
     this.group.rotateX(-90 * Math.PI / 180);
     this.scene.add(this.group)
     this.drawLevee()

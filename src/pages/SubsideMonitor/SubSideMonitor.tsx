@@ -9,17 +9,23 @@ export interface ISubSideMonitorProps {
 
 export default class SubSideMonitor extends React.Component<ISubSideMonitorProps> {
 
+  public state = {
+    leveeTimeTransformValue: {}
+  }
+
   public async componentDidMount() {
     const data = await reqLeveeTimeTransform()
-    console.log(data)
-
+    if (data.statusCode !== 200) return
+    this.setState({ leveeTimeTransformValue: data.data })
   }
 
   public render() {
+    const { leveeTimeTransformValue } = this.state
     return (
       <div className="monitor">
         <Card title="大提3D模型" className="three-d-model">
-          <LeveeThreeD />
+
+          <LeveeThreeD leveeTimeTransformValue={leveeTimeTransformValue} />
         </Card>
       </div>
     );
