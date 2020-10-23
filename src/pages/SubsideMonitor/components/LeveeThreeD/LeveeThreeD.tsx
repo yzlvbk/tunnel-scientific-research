@@ -253,7 +253,6 @@ const buildBack = (group: any) => {
   group.add(mesh)
 }
 
-
 interface ILeveeThreeDProps {
   leveeTimeTransformValue: any
 }
@@ -278,7 +277,6 @@ export default class LeveeThreeD extends React.Component<ILeveeThreeDProps> {
     rotateZ: 90
   }
 
-
   public componentDidMount() {
     this.container = document.querySelector(`.${style['levee-threeD-warp']}`)
     this.warp = this.container?.getBoundingClientRect()
@@ -302,6 +300,8 @@ export default class LeveeThreeD extends React.Component<ILeveeThreeDProps> {
     }
 
     const { leveeTimeTransformValue } = this.props
+    console.log(Object.values(leveeTimeTransformValue))
+    // ! 对象键值对顺序不一样 此处需要修改
     Object.values(leveeTimeTransformValue).forEach((item: any, index) => {
       const distance = index * 2 - 186
       const zoomItem = item / 10
@@ -318,8 +318,6 @@ export default class LeveeThreeD extends React.Component<ILeveeThreeDProps> {
     }
     this.initThree()
   }
-
-
 
   public drawLevee = () => {
     // 绘制河底
@@ -396,8 +394,8 @@ export default class LeveeThreeD extends React.Component<ILeveeThreeDProps> {
     // scene.add(directionalLightHelper)
 
     // 辅助坐标系   老版本AxisHelper 新版本AxesHelper
-    var axisHelper = new THREE.AxesHelper(1000)
-    this.scene.add(axisHelper)
+    // var axisHelper = new THREE.AxesHelper(1000)
+    // this.scene.add(axisHelper)
   }
 
   public initCamera = () => {

@@ -1,19 +1,40 @@
 import * as React from 'react'
 import * as echarts from 'echarts'
 import style from '../../style/index.module.less'
+import { reqLeveeTimeMaxDispTable } from '../../../../request/api'
 
 export interface ITimeChartProps {
 }
 
 export default class TimeChart extends React.Component<ITimeChartProps> {
-  myChart: any // 
+  myChart: any
 
-  componentDidMount() {
-    this.drawTimeChart()
+  public state = {
+    length: [],
+    current: [],
+    increment: [],
+    preday: []
+  }
+
+  public componentDidMount() {
+    this.getTimeChartData()
   }
 
   public componentWillUnmount() {
     window.removeEventListener('resize', this.resizeChart)
+  }
+
+  public getTimeChartData = async () => {
+    const data = await reqLeveeTimeMaxDispTable()
+    if (data.statusCode !== 200) return
+    this.setState({
+      length: data.data.length,
+      current: data.data.current,
+      increment: data.data.increment,
+      preday: data.data.preday
+    }, () => {
+      this.drawTimeChart()
+    })
   }
 
   public resizeChart = () => {
@@ -26,7 +47,7 @@ export default class TimeChart extends React.Component<ITimeChartProps> {
     var lineColor = "#CACACA"
 
     // moocX轴数据
-    const dataX = ['00:00', '01:00', '02:00', '03:00', '04:00', '05:00', '06:00', '07:00', '08:00', '09:00', '10:00', '11:00', '12:00']
+    const dataX = this.state.length
 
     // 1.初始化echarts
     // @ts-ignore
@@ -69,7 +90,7 @@ export default class TimeChart extends React.Component<ITimeChartProps> {
         type: 'category',
         boundaryGap: false, //坐标轴两边留白
         data: dataX,
-        name: '时间',
+        name: '位置(m)',
         axisLine: { //坐标轴轴线相关设置
           lineStyle: {
             color: fontColor
@@ -77,7 +98,7 @@ export default class TimeChart extends React.Component<ITimeChartProps> {
         }
       },
       yAxis: [{
-        name: '倾角(deg)',
+        name: '沉降(mm)',
         type: 'value',
         splitNumber: 5,
         axisLine: {
@@ -121,21 +142,13 @@ export default class TimeChart extends React.Component<ITimeChartProps> {
         }
       ],
       series: [{
-        name: '2018',
+        name: 'current',
         type: 'line',
         symbol: 'emptyCircle', // 标记形状
         lineStyle: {
           width: 1
         },
-        data: [1, 2, 3, 3, 5, 6, 5, 3, 6, 5, 5, 4]
-      },
-      {
-        name: '2019',
-        type: 'line',
-        lineStyle: {
-          width: 1
-        },
-        data: [9, 5, 7, 8, 6, 7, 8, 7, 7, 6, 8, 6]
+        data: this.state.current
       }
       ]
     };
