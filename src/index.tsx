@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import App from './App';
 import './assets/css/normalize.css';
 import 'antd/dist/antd.css'
+import './assets/css/antd-reset.less'
 import * as serviceWorker from './serviceWorker';
 
 ReactDOM.render(

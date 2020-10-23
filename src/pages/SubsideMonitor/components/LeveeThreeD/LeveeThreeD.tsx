@@ -3,6 +3,12 @@ import * as THREE from 'three'
 import { Lut } from './Lut';
 import OrbitControls from 'three-orbitcontrols'
 import style from '../../style/index.module.less'
+import frontView from './three-d-icon/frontView.png'
+import obliqueView from './three-d-icon/obliqueView.png'
+import sideView from './three-d-icon/sideView.png'
+import topView from './three-d-icon/topView.png'
+
+
 
 var params = {
   colorMap: 'rainbow',
@@ -261,13 +267,22 @@ export default class LeveeThreeD extends React.Component<ILeveeThreeDProps> {
   renderer: any;
   camera: any
 
+  public state = {
+    translateX: 80,
+    translateY: 150,
+    translateZ: 0,
+    rotateX: -90,
+    rotateY: 0,
+    rotateZ: 90
+  }
+
 
   public componentDidMount() {
     this.container = document.querySelector(`.${style['levee-threeD-warp']}`)
     this.warp = this.container?.getBoundingClientRect()
     this.containerWidth = this.warp!.right - this.warp!.left
     this.containerHeight = this.warp!.bottom - this.warp!.top
-    this.initThree();
+    // this.initThree();
   }
 
   public componentDidUpdate() {
@@ -300,7 +315,7 @@ export default class LeveeThreeD extends React.Component<ILeveeThreeDProps> {
       this.scene.remove()
       this.renderer.dispose()
     }
-    // this.initThree()
+    this.initThree()
 
 
   }
@@ -380,21 +395,24 @@ export default class LeveeThreeD extends React.Component<ILeveeThreeDProps> {
     // 辅助光源
     // var directionalLightHelper = new THREE.DirectionalLightHelper(directionalLight, 1)
     // scene.add(directionalLightHelper)
+
+    // 辅助坐标系   老版本AxisHelper 新版本AxesHelper
+    var axisHelper = new THREE.AxesHelper(1000)
+    this.scene.add(axisHelper)
   }
 
   public initCamera = () => {
     const k = this.containerWidth / this.containerHeight
     const s = 200
     this.camera = new THREE.OrthographicCamera(-s * k, s * k, s, -s, -10000000, 10000000);
-    this.camera.position.set(-100, 30, 0); //设置相机位置
+    this.camera.position.set(-100, 0, 0); //设置相机位置
     this.camera.lookAt(this.scene.position); //设置相机方向(指向的场景对象)
   }
 
   public initRenderer = () => {
-    this.renderer = new THREE.WebGLRenderer();
     // @ts-ignore
     this.renderer = new THREE.WebGLRenderer({
-      antialias: true,
+      antialias: false,
       alpha: true,
       // @ts-ignore
       canvas: this.container.querySelector('canvas')
@@ -413,21 +431,58 @@ export default class LeveeThreeD extends React.Component<ILeveeThreeDProps> {
   }
 
   public initThree = () => {
-    this.scene = new THREE.Scene();
-    this.group = new THREE.Group();
-    this.group.translateY(120);
-    this.group.rotateZ(-20 * Math.PI / 180);
-    this.group.rotateY(90 * Math.PI / 180);
-    this.group.rotateX(-90 * Math.PI / 180);
+    const {
+      translateX,
+      translateY,
+      translateZ,
+      rotateX,
+      rotateY,
+      rotateZ
+    } = this.state
+    this.scene = new THREE.Scene()
+    this.group = new THREE.Group()
+    this.group.translateX(translateX)
+    this.group.translateY(translateY)
+    this.group.translateZ(translateZ)
+    this.group.rotateX(rotateX * Math.PI / 180);
+    this.group.rotateY(rotateY * Math.PI / 180);
+    this.group.rotateZ(rotateZ * Math.PI / 180);
     this.scene.add(this.group)
     this.drawLevee()
     this.initLight()
     this.initCamera()
     this.initRenderer()
   }
+
+  public changeView = (tx: number, ty: number, tz: number, rx: number, ry: number, rz: number) => {
+    console.log('changeview');
+
+    this.setState({
+      translateX: tx,
+      translateY: ty,
+      translateZ: tz,
+      rotateX: rx,
+      rotateY: ry,
+      rotateZ: rz
+    }, () => {
+      if (this.scene || this.renderer) {
+        this.scene.remove()
+        this.renderer.dispose()
+      }
+      this.initThree()
+    })
+  }
+
   public render() {
     return (
       <div className={style['levee-threeD-warp']}>
+        <section className={style['three-d-icon']}>
+          <span className={style['three-d-icon-item']} onClick={() => this.changeView(80, 150, 0, -90, 0, 90)}><img src={frontView} alt='' /></span>
+          <span className={style['three-d-icon-item']} onClick={() => this.changeView(-30, 120, 60, -90, 0, -45)}><img src={obliqueView} alt='' /></span>
+          <span className={style['three-d-icon-item']} onClick={() => this.changeView(0, 150, 90, -90, 0, 0)}><img src={sideView} alt='' /></span>
+          <span className={style['three-d-icon-item']} onClick={() => this.changeView(-150, 80, 0, -90, -90, 90)}><img src={topView} alt='' /></span>
+        </section>
+
         <canvas></canvas>
       </div>
     );

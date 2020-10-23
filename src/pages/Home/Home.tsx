@@ -58,7 +58,7 @@ export default class Home extends Component<RouteComponentProps> {
 
         <Layout style={{ position: 'relative' }}>
           {/* 头部区域 */}
-          <Header style={{ position: 'fixed', top: 0, backgroundColor: '#fff', padding: 0, width: '100%', height: 48 }}></Header>
+          <Header style={{ position: 'fixed', top: 0, backgroundColor: '#fff', padding: 0, width: '100%', height: 48, zIndex: 100 }}></Header>
 
           {/* 内容区域 */}
           <Content className={home.content}>
