@@ -264,8 +264,10 @@ export default class LeveeThreeD extends React.Component<ILeveeThreeDProps> {
   containerHeight: any
   scene: any
   group: any
-  renderer: any;
+  renderer: any
   camera: any
+  controls: any
+  mouseZoom: number = 1
 
   public state = {
     translateX: 80,
@@ -282,7 +284,6 @@ export default class LeveeThreeD extends React.Component<ILeveeThreeDProps> {
     this.warp = this.container?.getBoundingClientRect()
     this.containerWidth = this.warp!.right - this.warp!.left
     this.containerHeight = this.warp!.bottom - this.warp!.top
-    // this.initThree();
   }
 
   public componentDidUpdate() {
@@ -316,8 +317,6 @@ export default class LeveeThreeD extends React.Component<ILeveeThreeDProps> {
       this.renderer.dispose()
     }
     this.initThree()
-
-
   }
 
 
@@ -407,6 +406,9 @@ export default class LeveeThreeD extends React.Component<ILeveeThreeDProps> {
     this.camera = new THREE.OrthographicCamera(-s * k, s * k, s, -s, -10000000, 10000000);
     this.camera.position.set(-100, 0, 0); //设置相机位置
     this.camera.lookAt(this.scene.position); //设置相机方向(指向的场景对象)
+    // 设置缩放大小
+    this.camera.zoom = this.mouseZoom
+    this.camera.updateProjectionMatrix()
   }
 
   public initRenderer = () => {
@@ -425,7 +427,7 @@ export default class LeveeThreeD extends React.Component<ILeveeThreeDProps> {
     }
     render()
     // @ts-ignore
-    new OrbitControls(this.camera, this.renderer.domElement)
+    this.controls = new OrbitControls(this.camera, this.renderer.domElement)
     // 取消添加OrbitControls时的边框线
     this.renderer.domElement.removeAttribute('tabindex')
   }
@@ -452,6 +454,10 @@ export default class LeveeThreeD extends React.Component<ILeveeThreeDProps> {
     this.initLight()
     this.initCamera()
     this.initRenderer()
+
+    // 监听鼠标滚动缩放事件
+    this.container.querySelector('canvas').addEventListener('wheel', this.mouseWheelFuc(), false)
+
   }
 
   public changeView = (tx: number, ty: number, tz: number, rx: number, ry: number, rz: number) => {
@@ -471,6 +477,18 @@ export default class LeveeThreeD extends React.Component<ILeveeThreeDProps> {
       }
       this.initThree()
     })
+  }
+
+  public mouseWheelFuc = () => {
+    let timer: any
+    return () => {
+      if (timer !== null) clearTimeout(timer)
+      timer = setTimeout(() => {
+        // 记录上次缩放比例
+        this.mouseZoom = this.controls.object.zoom
+        clearTimeout(timer)
+      }, 500)
+    }
   }
 
   public render() {
