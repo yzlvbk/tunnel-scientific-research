@@ -1,12 +1,14 @@
 import * as React from 'react'
 import * as echarts from 'echarts'
+import { connect } from 'react-redux'
 import style from '../../style/index.module.less'
-import { reqLeveeTimeMaxDispTable } from '../../../../request/api'
 
 export interface ITimeChartProps {
+  current: string[]
+  length: string[]
 }
 
-export default class TimeChart extends React.Component<ITimeChartProps> {
+class TimeChart extends React.Component<ITimeChartProps> {
   myChart: any
 
   public state = {
@@ -16,25 +18,12 @@ export default class TimeChart extends React.Component<ITimeChartProps> {
     preday: []
   }
 
-  public componentDidMount() {
-    this.getTimeChartData()
+  public componentDidUpdate() {
+    this.drawTimeChart()
   }
 
   public componentWillUnmount() {
     window.removeEventListener('resize', this.resizeChart)
-  }
-
-  public getTimeChartData = async () => {
-    const data = await reqLeveeTimeMaxDispTable()
-    if (data.statusCode !== 200) return
-    this.setState({
-      length: data.data.length,
-      current: data.data.current,
-      increment: data.data.increment,
-      preday: data.data.preday
-    }, () => {
-      this.drawTimeChart()
-    })
   }
 
   public resizeChart = () => {
@@ -42,12 +31,13 @@ export default class TimeChart extends React.Component<ITimeChartProps> {
   }
 
   public drawTimeChart = () => {
+    const { current, length } = this.props
     // 定义颜色
     var fontColor = "#1890ff"
     var lineColor = "#CACACA"
 
-    // moocX轴数据
-    const dataX = this.state.length
+    // X轴数据
+    const dataX = length.reverse()
 
     // 1.初始化echarts
     // @ts-ignore
@@ -55,9 +45,10 @@ export default class TimeChart extends React.Component<ITimeChartProps> {
 
     // 2.配置option
     const option = {
-      color: ['pink', 'blue'], // 线条颜色
+      color: ['#333'], // 线条颜色
       title: {
-        text: ''
+        text: '大堤实时沉降图',
+        left: 'center'
       },
       tooltip: {
         trigger: 'axis'
@@ -148,7 +139,7 @@ export default class TimeChart extends React.Component<ITimeChartProps> {
         lineStyle: {
           width: 1
         },
-        data: this.state.current
+        data: current.reverse()
       }
       ]
     };
@@ -166,10 +157,15 @@ export default class TimeChart extends React.Component<ITimeChartProps> {
   }
 
   public render() {
+    console.log('chart', this.props)
+
     return (
       <div className={style['time-chart']}></div>
     )
   }
 }
 
-
+export default connect(
+  // @ts-ignore
+  ({ current, length }) => ({ current, length })
+)(TimeChart)

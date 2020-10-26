@@ -300,16 +300,24 @@ export default class LeveeThreeD extends React.Component<ILeveeThreeDProps> {
     }
 
     const { leveeTimeTransformValue } = this.props
-    console.log(Object.values(leveeTimeTransformValue))
-    // ! 对象键值对顺序不一样 此处需要修改
-    Object.values(leveeTimeTransformValue).forEach((item: any, index) => {
+    for (let i = 0, x = Object.keys(leveeTimeTransformValue).length / 2; i < x; i += 0.5) {
+      const index = i * 2
       const distance = index * 2 - 186
-      const zoomItem = item / 10
+      const zoomItem = leveeTimeTransformValue[i] / 10
       if (vertices[(index * 8 + 3)] && vertices[(index * 8 + 4)]) {
         vertices.splice((index * 8 + 3), 1, (new THREE.Vector3(distance, 100, zoomItem)))
         vertices.splice((index * 8 + 4), 1, (new THREE.Vector3(distance, 121, zoomItem)))
       }
-    })
+    }
+    // ! 对象键值对顺序不一样 此处需要修改
+    // Object.values(leveeTimeTransformValue).forEach((item: any, index) => {
+    //   const distance = index * 2 - 186
+    //   const zoomItem = item / 10
+    //   if (vertices[(index * 8 + 3)] && vertices[(index * 8 + 4)]) {
+    //     vertices.splice((index * 8 + 3), 1, (new THREE.Vector3(distance, 100, zoomItem)))
+    //     vertices.splice((index * 8 + 4), 1, (new THREE.Vector3(distance, 121, zoomItem)))
+    //   }
+    // })
 
 
     if (this.scene || this.renderer) {

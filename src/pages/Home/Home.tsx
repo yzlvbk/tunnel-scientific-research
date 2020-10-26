@@ -9,7 +9,7 @@ import {
   MenuUnfoldOutlined
 } from '@ant-design/icons'
 import { debounce } from '../../utils/debounce'
-import SubSideMonitor from '../SubsideMonitor/SubSideMonitor'
+import SubSideMonitor from '../SubsideMonitor/TimeMonitor'
 import SubsideHistory from '../SubsideHistory/SubsideHistory'
 const { Header, Sider, Content } = Layout
 
