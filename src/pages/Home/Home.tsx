@@ -11,6 +11,8 @@ import {
 import { debounce } from '../../utils/debounce'
 import SubSideMonitor from '../SubsideMonitor/TimeMonitor'
 import SubsideHistory from '../SubsideHistory/SubsideHistory'
+import SubsideSensor from '../SubsideSensor/SubsideSensor'
+import ConvergenceTransform from '../ConvergenceTransform/ConvergenceTransform'
 const { Header, Sider, Content } = Layout
 
 
@@ -64,7 +66,9 @@ export default class Home extends Component<RouteComponentProps> {
           <Content className={home.content}>
             <Switch>
               <Route path="/subsideMonitor" component={SubSideMonitor} />
-              <Route path='/SubsideHistory' component={SubsideHistory} />
+              <Route path='/subsideHistory' component={SubsideHistory} />
+              <Route path='/subsideSensor' component={SubsideSensor} />
+              <Route path='/convergenceTransform' component={ConvergenceTransform} />
             </Switch>
           </Content>
         </Layout>

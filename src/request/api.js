@@ -15,4 +15,8 @@ export const reqLeveeHistoryMaxDisp = (startTime, endTime) => http('/levee/GetHi
 /* 历史数据单个测点数据 */
 export const reqLeveeHistorySingle = (startTime, endTime, length) => http('/levee/GetHistorySingle', { startTime, endTime, length }, 'GET')
 
+/* 传感器信息 */
+export const reqSensorDataTable = () => http('/levee/GetSensorDataTable', {}, 'GET')
 
+/* 传感器基本信 */
+export const reqSensorInfo = () => http('/levee/GetSensorInfo', {}, 'GET')

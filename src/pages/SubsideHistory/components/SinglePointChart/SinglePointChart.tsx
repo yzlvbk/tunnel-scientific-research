@@ -1,25 +1,28 @@
 import * as React from 'react'
 import * as echarts from 'echarts'
-import { connect } from 'react-redux'
+import { reqLeveeHistorySingle } from '../../../../request/api'
 import style from '../../style/index.module.less'
 
-export interface ITimeChartProps {
-  current: string[]
-  length: string[]
+export interface ISinglePointChartProps {
+  tabsDates: string[]
 }
 
-class TimeChart extends React.Component<ITimeChartProps> {
+export default class SinglePointChart extends React.Component<ISinglePointChartProps> {
   myChart: any
 
-  public state = {
-    length: [],
-    current: [],
-    increment: [],
-    preday: []
+  public startDrawChart = async () => {
+    const { tabsDates } = this.props
+    const data = await reqLeveeHistorySingle(tabsDates[0], tabsDates[1], '0.5')
+    if (!data.isSuccess) return
+    this.drawSinglePointChart(data.data)
   }
 
-  public componentDidUpdate() {
-    this.drawTimeChart()
+  public async componentDidMount() {
+    this.startDrawChart()
+  }
+
+  public async componentDidUpdate() {
+    this.startDrawChart()
   }
 
   public componentWillUnmount() {
@@ -30,31 +33,28 @@ class TimeChart extends React.Component<ITimeChartProps> {
     this.myChart.resize()
   }
 
-  public drawTimeChart = () => {
-    const { current, length } = this.props
+  public drawSinglePointChart = (maxOffsetData: { x: [], y: [] }) => {
+    const { x, y } = maxOffsetData
     // 定义颜色
     var fontColor = "#1890ff"
     var lineColor = "#CACACA"
 
     // X轴数据
-    const dataX = length.reverse()
+    const dataX = x
 
     // 1.初始化echarts
     // @ts-ignore
-    this.myChart = echarts.init(document.querySelector(`.${style['time-chart']}`))
+    this.myChart = echarts.init(document.querySelector(`.${style['single-point-chart']}`))
 
     // 2.配置option
     const option = {
       color: ['#333'], // 线条颜色
       title: {
-        text: '大堤实时沉降图',
+        text: '大堤单点位移图',
         left: 'center'
       },
       tooltip: {
         trigger: 'axis'
-      },
-      legend: {
-        data: ['2018', '2019']
       },
       grid: {
         left: '3%',
@@ -81,7 +81,7 @@ class TimeChart extends React.Component<ITimeChartProps> {
         type: 'category',
         boundaryGap: false, //坐标轴两边留白
         data: dataX,
-        name: '位置(m)',
+        name: '时间',
         axisLine: { //坐标轴轴线相关设置
           lineStyle: {
             color: fontColor
@@ -89,7 +89,7 @@ class TimeChart extends React.Component<ITimeChartProps> {
         }
       },
       yAxis: [{
-        name: '沉降(mm)',
+        name: '位移(mm)',
         type: 'value',
         splitNumber: 5,
         axisLine: {
@@ -133,13 +133,13 @@ class TimeChart extends React.Component<ITimeChartProps> {
         }
       ],
       series: [{
-        name: 'current',
+        name: '单点位移',
         type: 'line',
         symbol: 'emptyCircle', // 标记形状
         lineStyle: {
           width: 1
         },
-        data: current.reverse()
+        data: y
       }
       ]
     };
@@ -158,12 +158,7 @@ class TimeChart extends React.Component<ITimeChartProps> {
 
   public render() {
     return (
-      <div className={style['time-chart']}></div>
+      <div className={style['single-point-chart']}></div>
     )
   }
 }
-
-export default connect(
-  // @ts-ignore
-  ({ current, length }) => ({ current, length })
-)(TimeChart)

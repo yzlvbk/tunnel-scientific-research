@@ -1,25 +1,23 @@
-import * as React from 'react'
+import React, { Component } from 'react'
 import * as echarts from 'echarts'
-import { connect } from 'react-redux'
+import { reqLeveeHistoryMaxDisp } from '../../../../request/api'
 import style from '../../style/index.module.less'
 
-export interface ITimeChartProps {
-  current: string[]
-  length: string[]
+interface Props {
+  tabsDates: string[]
+}
+interface State {
+
 }
 
-class TimeChart extends React.Component<ITimeChartProps> {
+export default class MaxOffsetChart extends Component<Props, State> {
   myChart: any
 
-  public state = {
-    length: [],
-    current: [],
-    increment: [],
-    preday: []
-  }
-
-  public componentDidUpdate() {
-    this.drawTimeChart()
+  public async componentDidUpdate() {
+    const { tabsDates } = this.props
+    const data = await reqLeveeHistoryMaxDisp(tabsDates[0], tabsDates[1])
+    if (!data.isSuccess) return
+    this.drawMaxOffsetChart(data.data)
   }
 
   public componentWillUnmount() {
@@ -30,31 +28,29 @@ class TimeChart extends React.Component<ITimeChartProps> {
     this.myChart.resize()
   }
 
-  public drawTimeChart = () => {
-    const { current, length } = this.props
+  public drawMaxOffsetChart = (maxOffsetData: { x: [], y: [], maxLenList: [] }) => {
+    const { x, y } = maxOffsetData
+
     // 定义颜色
     var fontColor = "#1890ff"
     var lineColor = "#CACACA"
 
     // X轴数据
-    const dataX = length.reverse()
+    const dataX = x
 
     // 1.初始化echarts
     // @ts-ignore
-    this.myChart = echarts.init(document.querySelector(`.${style['time-chart']}`))
+    this.myChart = echarts.init(document.querySelector(`.${style['max-offset-chart']}`))
 
     // 2.配置option
     const option = {
       color: ['#333'], // 线条颜色
       title: {
-        text: '大堤实时沉降图',
+        text: '大堤最大位移图',
         left: 'center'
       },
       tooltip: {
         trigger: 'axis'
-      },
-      legend: {
-        data: ['2018', '2019']
       },
       grid: {
         left: '3%',
@@ -81,7 +77,7 @@ class TimeChart extends React.Component<ITimeChartProps> {
         type: 'category',
         boundaryGap: false, //坐标轴两边留白
         data: dataX,
-        name: '位置(m)',
+        name: '时间',
         axisLine: { //坐标轴轴线相关设置
           lineStyle: {
             color: fontColor
@@ -89,7 +85,7 @@ class TimeChart extends React.Component<ITimeChartProps> {
         }
       },
       yAxis: [{
-        name: '沉降(mm)',
+        name: '位移(mm)',
         type: 'value',
         splitNumber: 5,
         axisLine: {
@@ -133,13 +129,13 @@ class TimeChart extends React.Component<ITimeChartProps> {
         }
       ],
       series: [{
-        name: 'current',
+        name: '最大位移',
         type: 'line',
         symbol: 'emptyCircle', // 标记形状
         lineStyle: {
           width: 1
         },
-        data: current.reverse()
+        data: y
       }
       ]
     };
@@ -156,14 +152,9 @@ class TimeChart extends React.Component<ITimeChartProps> {
     }, 100);
   }
 
-  public render() {
+  render() {
     return (
-      <div className={style['time-chart']}></div>
+      <div className={style['max-offset-chart']}></div>
     )
   }
 }
-
-export default connect(
-  // @ts-ignore
-  ({ current, length }) => ({ current, length })
-)(TimeChart)
