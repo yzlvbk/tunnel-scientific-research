@@ -3,11 +3,15 @@ import axios from 'axios'
 import { message } from 'antd'
 
 // 开发环境
-const baseUrl = 'http://118.190.216.205:8008/api/leveescience'
+const defaultUrl = 'http://118.190.216.205:8008/api/leveescience' //默认url
+const tunnelUrl = 'http://118.190.216.205:80/tunnel_service' // 隧道url
+
 // 生产环境
 // const baseUrl = ''
 
-export default function http(url, data = {}, type = 'GET') {
+//isTunnelUrl 代表是否为隧道url
+export default function http(url, data = {}, type = 'GET', isTunnelUrl = false) {
+  const baseUrl = isTunnelUrl ? tunnelUrl : defaultUrl
   return new Promise((resolve, reject) => {
     let promise
 

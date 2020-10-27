@@ -83,5 +83,6 @@ class TimeTable extends React.Component<ITimeTableProps> {
 }
 
 export default connect(
-  state => state
+  // @ts-ignore
+  ({ TimeMonitorReducer }) => (TimeMonitorReducer)
 )(TimeTable)

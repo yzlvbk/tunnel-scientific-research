@@ -20,3 +20,9 @@ export const reqSensorDataTable = () => http('/levee/GetSensorDataTable', {}, 'G
 
 /* 传感器基本信 */
 export const reqSensorInfo = () => http('/levee/GetSensorInfo', {}, 'GET')
+
+/* 收敛变形历史图 */
+export const reqConvergentDeformationTime = (pipeId, startTime, endTime) => http('/convergentDeformationTime', { pipeId, startTime, endTime }, 'POST', true)
+
+/* 收敛变形专业图 */
+export const reqConvergentDeformationPipe = (pipeId, startTime) => http('/convergentDeformationPipe', { pipeId, startTime }, 'POST', true)

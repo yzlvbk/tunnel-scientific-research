@@ -1,47 +1,45 @@
 import * as React from 'react'
 import * as echarts from 'echarts'
 import { connect } from 'react-redux'
-import style from '../../style/index.module.less'
+import { reqConvergentDeformationTime, reqConvergentDeformationPipe } from '../../../../request/api'
 
-export interface ITimeChartProps {
-  current: string[]
-  length: string[]
+export interface IConvergenceTransformTimeChartProps {
+  transformDate: string[]
 }
 
-class TimeChart extends React.Component<ITimeChartProps> {
+class ConvergenceTransformTimeChart extends React.Component<IConvergenceTransformTimeChartProps> {
   myChart: any
-
-  public state = {
-    length: [],
-    current: [],
-    increment: [],
-    preday: []
-  }
-
-  public componentDidUpdate() {
-    this.drawTimeChart()
-  }
-
-  public componentWillUnmount() {
-    window.removeEventListener('resize', this.resizeChart)
-  }
 
   public resizeChart = () => {
     this.myChart.resize()
   }
 
-  public drawTimeChart = () => {
-    const { current, length } = this.props
+  public componentDidMount() {
+    this.startDrawChart()
+  }
+
+  public componentDidUpdate() {
+    this.startDrawChart()
+  }
+  public componentWillUnmount() {
+    window.removeEventListener('resize', this.resizeChart)
+  }
+
+  public startDrawChart = async () => {
+    const { transformDate } = this.props
+    const data = await reqConvergentDeformationTime('342', transformDate[0], transformDate[1])
+    if (data.data.length === 0) return
+    this.drawConvergenceTransformTimeChart(data.data)
+  }
+
+  public drawConvergenceTransformTimeChart = (data: any) => {
     // 定义颜色
     var fontColor = "#1890ff"
     var lineColor = "#CACACA"
 
-    // X轴数据
-    const dataX = length.reverse()
-
     // 1.初始化echarts
     // @ts-ignore
-    this.myChart = echarts.init(document.querySelector(`.${style['time-chart']}`))
+    this.myChart = echarts.init(document.querySelector('.convergence-transform-time-chart'))
 
     // 2.配置option
     const option = {
@@ -52,9 +50,6 @@ class TimeChart extends React.Component<ITimeChartProps> {
       },
       tooltip: {
         trigger: 'axis'
-      },
-      legend: {
-        data: ['2018', '2019']
       },
       grid: {
         left: '3%',
@@ -80,8 +75,7 @@ class TimeChart extends React.Component<ITimeChartProps> {
       xAxis: {
         type: 'category',
         boundaryGap: false, //坐标轴两边留白
-        data: dataX,
-        name: '位置(m)',
+        name: '时间',
         axisLine: { //坐标轴轴线相关设置
           lineStyle: {
             color: fontColor
@@ -89,7 +83,7 @@ class TimeChart extends React.Component<ITimeChartProps> {
         }
       },
       yAxis: [{
-        name: '沉降(mm)',
+        name: '变形(mm)',
         type: 'value',
         splitNumber: 5,
         axisLine: {
@@ -133,13 +127,12 @@ class TimeChart extends React.Component<ITimeChartProps> {
         }
       ],
       series: [{
-        name: 'current',
         type: 'line',
         symbol: 'emptyCircle', // 标记形状
         lineStyle: {
           width: 1
         },
-        data: current.reverse()
+        data: data
       }
       ]
     };
@@ -148,22 +141,38 @@ class TimeChart extends React.Component<ITimeChartProps> {
     // @ts-ignore
     this.myChart.setOption(option, true)
 
+    // 4.响应式变化
     window.addEventListener('resize', this.resizeChart)
 
-    // 立即执行resize，否则刷新页面，echarts宽度多处200px
+    // 立即执行resize，否则刷新页面，echarts宽度多出200px
     setTimeout(() => {
       this.myChart.resize()
-    }, 100);
+    }, 100)
+
+    // 注册点击echarts事件
+    this.myChart.on('click', (params: any) => {
+      this.clickEchartReqAnalyse(params.value[0])
+    })
+  }
+
+  // 点击echart请求收敛分析图数据
+  public clickEchartReqAnalyse = async (startTime: string) => {
+    // 存储数据至react-redux
+    // @ts-ignore
+    this.props.dispatch(async (dispatch) => {
+      const data = await reqConvergentDeformationPipe('342', startTime)
+      console.log('clickEchartReqAnalyse', data)
+      if (data.data.length === 0) return
+      dispatch({ type: 'saveTransformData', payload: data.data })
+    })
   }
 
   public render() {
     return (
-      <div className={style['time-chart']}></div>
+      <div style={{ height: 300 }} className="convergence-transform-time-chart">
+      </div>
     )
   }
 }
 
-export default connect(
-  // @ts-ignore
-  ({ TimeMonitorReducer }) => ({ current: TimeMonitorReducer.current, length: TimeMonitorReducer.length })
-)(TimeChart)
+export default connect()(ConvergenceTransformTimeChart)

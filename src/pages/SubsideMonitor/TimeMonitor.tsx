@@ -45,6 +45,8 @@ class SubSideMonitor extends React.Component<{}> {
 
 
   public render() {
+    console.log(this.props)
+
     const { leveeTimeTransformValue } = this.state
     return (
       <div className="monitor">
