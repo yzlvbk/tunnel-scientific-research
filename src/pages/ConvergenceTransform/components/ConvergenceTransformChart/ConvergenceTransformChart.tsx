@@ -42,8 +42,6 @@ class ConvergenceTransformChart extends React.Component<IConvergenceTransformCha
     const lineColor = '#999'
     const fontColor = "rgb(44, 118, 114)"
 
-    // X轴数据
-
     // 1.初始化echarts
     // @ts-ignore
     this.myChart = echarts.init(document.querySelector(`.${style['convergence-transform-chart']}`))
@@ -79,6 +77,7 @@ class ConvergenceTransformChart extends React.Component<IConvergenceTransformCha
       radiusAxis: {
         min: -60, // 可变
         max: 40, // 可变
+        splitNumber: 1,
         axisLabel: {
           color: fontColor
         },
@@ -117,8 +116,8 @@ class ConvergenceTransformChart extends React.Component<IConvergenceTransformCha
           show: false,
           type: "slider",
           height: 18, //滚动条高度
-          start: 0, //开始位置
-          end: 100, //结束位置
+          start: 30, //开始位置
+          end: 80, //结束位置
           radiusAxisIndex: 0,
           realtime: true, //实时显示
           handleIcon: "path://M306.1,413c0,2.2-1.8,4-4,4h-59.8c-2.2,0-4-1.8-4-4V200.8c0-2.2,1.8-4,4-4h59.8c2.2,0,4,1.8,4,4V413z",
