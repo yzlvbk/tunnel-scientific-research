@@ -274,7 +274,8 @@ export default class LeveeThreeD extends React.Component<ILeveeThreeDProps, ILev
   camera: any
   controls: any
   mouseZoom: number = 1
-
+  rotation: any // 上次旋转
+  // -0.6022259865823375, _y: 0.7202738569808437, _z: 0.4256851453949111
   public state = {
     translateX: 80,
     translateY: 150,
@@ -416,6 +417,17 @@ export default class LeveeThreeD extends React.Component<ILeveeThreeDProps, ILev
     this.camera.lookAt(this.scene.position); //设置相机方向(指向的场景对象)
     // 设置缩放大小
     this.camera.zoom = this.mouseZoom
+    console.log(this.camera)
+    console.log('camera', this.rotation)
+    // if (this.rotation) {
+    //   // this.camera.rotation.set(this.rotation.x, this.rotation.y, this.rotation.z)
+
+    //   -3.1415926535897
+    //   console.log('camera', this.rotation)
+    // }
+
+    // this.rotation && this.camera.rotation = this.rotation
+
     this.camera.updateProjectionMatrix()
   }
 
@@ -436,11 +448,13 @@ export default class LeveeThreeD extends React.Component<ILeveeThreeDProps, ILev
     render()
     // @ts-ignore
     this.controls = new OrbitControls(this.camera, this.renderer.domElement)
+
     // 取消添加OrbitControls时的边框线
     this.renderer.domElement.removeAttribute('tabindex')
   }
 
   public initThree = () => {
+    this.controls && this.controls.reset()
     const {
       translateX,
       translateY,
@@ -451,6 +465,7 @@ export default class LeveeThreeD extends React.Component<ILeveeThreeDProps, ILev
     } = this.state
     this.scene = new THREE.Scene()
     this.group = new THREE.Group()
+    this.initCamera()
     this.group.translateX(translateX)
     this.group.translateY(translateY)
     this.group.translateZ(translateZ)
@@ -460,11 +475,20 @@ export default class LeveeThreeD extends React.Component<ILeveeThreeDProps, ILev
     this.scene.add(this.group)
     this.drawLevee()
     this.initLight()
-    this.initCamera()
+
     this.initRenderer()
 
     // 监听鼠标滚动缩放事件
     this.container.querySelector('canvas').addEventListener('wheel', this.mouseWheelFuc(), false)
+    this.container.querySelector('canvas').addEventListener('click', () => {
+      // this.controls.saveState()
+      this.rotation = this.controls.object.rotation
+      console.log('click', this.rotation)
+
+      // this.position0 = this.controls.object.position
+      // this.zoom0 = this.controls.object.zoom
+    }, false)
+
 
   }
 
