@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
 import { Card, Table } from 'antd'
 import { ColumnsType } from 'antd/es/table'
-import { reqSensorDataTable } from '../../request/api'
+import { reqSensorDataTable, reqSensorInfo } from '../../request/api'
 
-const columns: ColumnsType<Object> = [
+const sensorColumns: ColumnsType<Object> = [
   {
     title: '名称',
     dataIndex: 'Name',
@@ -41,37 +41,53 @@ const columns: ColumnsType<Object> = [
   }
 ]
 
-const data: any[] = [];
-for (let i = 0; i < 100; i++) {
-  data.push({
-    key: i,
-    Name: `Edward King`,
-    Id: 1,
-    IclX: `London, Park Lane no.`,
-    IclY: `London, Park Lane no.`,
-    AcclX: 'dasda',
-    AcclY: 'dasda',
-    AcclZ: 'dasda',
-  });
-}
-
-interface Props {
-
-}
-interface State {
-
-}
-
-
-
-export default class SubsideSensor extends Component<Props, State> {
-  state = {
-    sensorTableData: []
+const sensorBaseColumns: ColumnsType<Object> = [
+  {
+    title: '名称',
+    dataIndex: 'Name',
+    align: 'center'
+  },
+  {
+    title: '编号',
+    dataIndex: 'Id',
+    align: 'center'
+  },
+  {
+    title: '类型',
+    dataIndex: 'Type',
+    align: 'center'
+  },
+  {
+    title: '状态',
+    dataIndex: 'State',
+    align: 'center'
   }
-  // sensorTableData: any = []
+]
 
+
+export default class SubsideSensor extends Component {
+  intervalTimer: any = null // 定时器
+  state = {
+    sensorTableData: [],  // 传感器信息
+    sensorBaseInfo: [] // 传感器基本信息
+  }
 
   public async componentDidMount() {
+    this.getSensorTable()
+    this.getSensorBaseInfo()
+
+    this.intervalTimer = setInterval(() => {
+      this.getSensorTable()
+    }, 1000 * 60 * 5)
+
+  }
+
+  public componentWillUnmount() {
+    if (this.intervalTimer) clearInterval(this.intervalTimer)
+  }
+
+  // 传感器信息(5分钟定时请求)
+  public getSensorTable = async () => {
     const data = await reqSensorDataTable()
     if (!data.isSuccess) return
     const sensorTableData: any[] = []
@@ -92,12 +108,27 @@ export default class SubsideSensor extends Component<Props, State> {
     this.setState({ sensorTableData })
   }
 
+  // 获取传感器基本信息
+  public getSensorBaseInfo = async () => {
+    const data = await reqSensorInfo()
+    if (!data.isSuccess) return
+    const sensorBaseInfo = data.data.map((item: any, index: number) => {
+      item.key = index
+      return item
+    })
+    this.setState({ sensorBaseInfo })
+  }
+
   render() {
-    const { sensorTableData } = this.state
+    const { sensorTableData, sensorBaseInfo } = this.state
     return (
       <div>
+        <Card title="传感器信息">
+          <Table columns={sensorColumns} dataSource={sensorTableData} pagination={false} />
+        </Card>
+
         <Card title="传感器基本信息">
-          <Table columns={columns} dataSource={sensorTableData} pagination={false} />
+          <Table columns={sensorBaseColumns} dataSource={sensorBaseInfo} pagination={false} />
         </Card>
       </div>
     )

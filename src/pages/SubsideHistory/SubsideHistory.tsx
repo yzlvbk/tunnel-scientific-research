@@ -4,7 +4,7 @@ import { reqLevee3DHistory } from '../../request/api'
 import LeveeThreeD from '../../components/LeveeThreeD/LeveeThreeD'
 import RainbowBar from '../../components/rainbowBar/RainbowBar'
 import ZoomSlider from './components/ZoomSlider/ZoomSlider'
-import DatePicker from './components/DatePicker/DataPicker'
+import DatePicker from '../../components/DatePicker/DataPicker'
 import MaxOffsetChart from './components/MaxOffsetChart/MaxOffsetChart'
 import SinglePointChart from './components/SinglePointChart/SinglePointChart'
 

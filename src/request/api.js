@@ -18,7 +18,7 @@ export const reqLeveeHistorySingle = (startTime, endTime, length) => http('/leve
 /* 传感器信息 */
 export const reqSensorDataTable = () => http('/levee/GetSensorDataTable', {}, 'GET')
 
-/* 传感器基本信 */
+/* 传感器基本信息 */
 export const reqSensorInfo = () => http('/levee/GetSensorInfo', {}, 'GET')
 
 /* 收敛变形历史图 */
@@ -26,3 +26,6 @@ export const reqConvergentDeformationTime = (pipeId, startTime, endTime) => http
 
 /* 收敛变形专业图 */
 export const reqConvergentDeformationPipe = (pipeId, startTime) => http('/convergentDeformationPipe', { pipeId, startTime }, 'POST', true)
+
+/* 收敛变形传感器信息 */
+export const reqDeformSensorInfo = (ringId) => http('/deform/GetSensorInfo', { ringId }, 'GET')

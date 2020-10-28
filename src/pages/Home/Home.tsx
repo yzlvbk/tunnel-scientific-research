@@ -13,8 +13,10 @@ import SubSideMonitor from '../SubsideMonitor/TimeMonitor'
 import SubsideHistory from '../SubsideHistory/SubsideHistory'
 import SubsideSensor from '../SubsideSensor/SubsideSensor'
 import ConvergenceTransform from '../ConvergenceTransform/ConvergenceTransform'
-const { Header, Sider, Content } = Layout
+import ConvergenceSensor from '../ConvergenceSensor/ConvergenceSensor'
+import ProjectInfo from '../ProjectInfo/ProjectInfo'
 
+const { Header, Sider, Content } = Layout
 
 export default class Home extends Component<RouteComponentProps> {
   public state = {
@@ -65,10 +67,13 @@ export default class Home extends Component<RouteComponentProps> {
           {/* 内容区域 */}
           <Content className={home.content}>
             <Switch>
+
               <Route path="/subsideMonitor" component={SubSideMonitor} />
               <Route path='/subsideHistory' component={SubsideHistory} />
               <Route path='/subsideSensor' component={SubsideSensor} />
               <Route path='/convergenceTransform' component={ConvergenceTransform} />
+              <Route path='/convergenceSensor' component={ConvergenceSensor} />
+              <Route path='/projectInfo' component={ProjectInfo} />
             </Switch>
           </Content>
         </Layout>

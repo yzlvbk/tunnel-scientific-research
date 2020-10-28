@@ -1,6 +1,5 @@
 import * as React from 'react'
 import { DatePicker, Space } from 'antd'
-import style from '../../style/index.module.less'
 import moment from 'moment'
 
 const { RangePicker } = DatePicker
@@ -23,7 +22,12 @@ export default class DatePickerComponent extends React.Component<IDatePickerProp
 
   public render() {
     return (
-      <div className={style["date-picker-component"]}>
+      <div
+        style={{
+          position: 'absolute',
+          right: 22,
+          top: 15
+        }}>
         <Space direction="vertical" size={12}>
           <RangePicker
             defaultValue={[moment('2020-10-21 10:00'), moment('2020-10-21 11:00')]}

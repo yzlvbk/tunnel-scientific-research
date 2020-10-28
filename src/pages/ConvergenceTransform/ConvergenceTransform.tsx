@@ -2,7 +2,7 @@ import * as React from 'react'
 import { Card, Slider, Select } from 'antd'
 import ConvergenceTransformChart from './components/ConvergenceTransformChart/ConvergenceTransformChart'
 import ConvergenceTransformTimeChart from './components/ConvergenceTransformTimeChart/ConvergenceTransformTimeChart'
-import DatePicker from '../SubsideHistory/components/DatePicker/DataPicker'
+import DatePicker from '../../components/DatePicker/DataPicker'
 import style from './style/index.module.less'
 
 const { Option } = Select
