@@ -2,13 +2,11 @@ import * as React from 'react';
 import * as THREE from 'three'
 import { Lut } from './Lut';
 import OrbitControls from 'three-orbitcontrols'
-import style from '../../style/index.module.less'
+import style from './index.module.less'
 import frontView from './three-d-icon/frontView.png'
 import obliqueView from './three-d-icon/obliqueView.png'
 import sideView from './three-d-icon/sideView.png'
 import topView from './three-d-icon/topView.png'
-
-
 
 var params = {
   colorMap: 'rainbow',
@@ -256,7 +254,16 @@ const buildBack = (group: any) => {
 interface ILeveeThreeDProps {
   leveeTimeTransformValue: any
 }
-export default class LeveeThreeD extends React.Component<ILeveeThreeDProps> {
+
+interface ILeveeThreeDState {
+  translateX: number
+  translateY: number
+  translateZ: number
+  rotateX: number
+  rotateY: number
+  rotateZ: number
+}
+export default class LeveeThreeD extends React.Component<ILeveeThreeDProps, ILeveeThreeDState> {
   container: any
   warp: any
   containerWidth: any
@@ -284,6 +291,11 @@ export default class LeveeThreeD extends React.Component<ILeveeThreeDProps> {
     this.containerHeight = this.warp!.bottom - this.warp!.top
   }
 
+  // 防止重复render
+  public shouldComponentUpdate(nextProps: ILeveeThreeDProps, nextState: ILeveeThreeDState) {
+    return this.props.leveeTimeTransformValue !== nextProps.leveeTimeTransformValue || this.state !== nextState
+  }
+
   public componentDidUpdate() {
     //  动态整合vertices
     vertices = []
@@ -303,22 +315,12 @@ export default class LeveeThreeD extends React.Component<ILeveeThreeDProps> {
     for (let i = 0, x = Object.keys(leveeTimeTransformValue).length / 2; i < x; i += 0.5) {
       const index = i * 2
       const distance = index * 2 - 186
-      const zoomItem = leveeTimeTransformValue[i] / 10
+      const zoomItem = leveeTimeTransformValue[i] / 10 // 将沉降值 / 10
       if (vertices[(index * 8 + 3)] && vertices[(index * 8 + 4)]) {
         vertices.splice((index * 8 + 3), 1, (new THREE.Vector3(distance, 100, zoomItem)))
         vertices.splice((index * 8 + 4), 1, (new THREE.Vector3(distance, 121, zoomItem)))
       }
     }
-    // ! 对象键值对顺序不一样 此处需要修改
-    // Object.values(leveeTimeTransformValue).forEach((item: any, index) => {
-    //   const distance = index * 2 - 186
-    //   const zoomItem = item / 10
-    //   if (vertices[(index * 8 + 3)] && vertices[(index * 8 + 4)]) {
-    //     vertices.splice((index * 8 + 3), 1, (new THREE.Vector3(distance, 100, zoomItem)))
-    //     vertices.splice((index * 8 + 4), 1, (new THREE.Vector3(distance, 121, zoomItem)))
-    //   }
-    // })
-
 
     if (this.scene || this.renderer) {
       this.scene.remove()
@@ -467,8 +469,6 @@ export default class LeveeThreeD extends React.Component<ILeveeThreeDProps> {
   }
 
   public changeView = (tx: number, ty: number, tz: number, rx: number, ry: number, rz: number) => {
-    console.log('changeview');
-
     this.setState({
       translateX: tx,
       translateY: ty,

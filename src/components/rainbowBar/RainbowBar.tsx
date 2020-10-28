@@ -1,5 +1,5 @@
 import React, { ReactElement } from 'react'
-import style from '../../style/index.module.less'
+import style from './index.module.less'
 
 interface Props {
 

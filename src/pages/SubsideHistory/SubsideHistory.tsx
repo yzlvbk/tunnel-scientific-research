@@ -1,7 +1,8 @@
 import * as React from 'react'
 import { Card, Tabs } from 'antd'
 import { reqLevee3DHistory } from '../../request/api'
-import LeveeThreeD from '../SubsideMonitor/components/LeveeThreeD/LeveeThreeD'
+import LeveeThreeD from '../../components/LeveeThreeD/LeveeThreeD'
+import RainbowBar from '../../components/rainbowBar/RainbowBar'
 import ZoomSlider from './components/ZoomSlider/ZoomSlider'
 import DatePicker from './components/DatePicker/DataPicker'
 import MaxOffsetChart from './components/MaxOffsetChart/MaxOffsetChart'
@@ -58,6 +59,7 @@ export default class SubsideHistory extends React.Component<IAppProps> {
     return (
       <div className="subside-history">
         <Card title="大提历史3D模型">
+          <RainbowBar />
           <LeveeThreeD leveeTimeTransformValue={leveeTimeTransformValue} />
           <ZoomSlider slideChangeFormSon={this.threeDSlideChangeFormSon.bind(this)} zoomSlideValue={zoomSlideValue} />
           <DatePicker dateChangeFromSon={this.threeDDateChangeFromSon.bind(this)} />

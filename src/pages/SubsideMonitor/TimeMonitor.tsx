@@ -1,8 +1,8 @@
 import * as React from 'react'
 import { Card } from 'antd'
 import { reqLeveeTimeTransform, reqLeveeTimeMaxDispTable } from '../../request/api'
-import LeveeThreeD from './components/LeveeThreeD/LeveeThreeD'
-import RainbowBar from './components/rainbowBar/RainbowBar'
+import LeveeThreeD from '../../components/LeveeThreeD/LeveeThreeD'
+import RainbowBar from '../../components/rainbowBar/RainbowBar'
 import TimeChart from './components/TimeChart/TimeChart'
 import TimeTable from './components/TimeTable/TimeTable'
 import { connect } from "react-redux"

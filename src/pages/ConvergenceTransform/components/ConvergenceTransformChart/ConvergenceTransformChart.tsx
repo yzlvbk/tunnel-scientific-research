@@ -5,6 +5,7 @@ import style from '../../style/index.module.less'
 
 export interface IConvergenceTransformChartProps {
   transformReducer: any
+  slideValue: number
 }
 
 class ConvergenceTransformChart extends React.Component<IConvergenceTransformChartProps> {
@@ -27,7 +28,11 @@ class ConvergenceTransformChart extends React.Component<IConvergenceTransformCha
   }
 
   public drawConvergenceTransformChart = () => {
-    const { transformReducer } = this.props
+    const { transformReducer, slideValue } = this.props
+    // 定义缩放值
+    const zoomStart = 0 + slideValue * 1.5
+    const zoomEnd = 100 - slideValue
+
 
     // 定义折线图数据
     const dataX = []
@@ -116,8 +121,8 @@ class ConvergenceTransformChart extends React.Component<IConvergenceTransformCha
           show: false,
           type: "slider",
           height: 18, //滚动条高度
-          start: 30, //开始位置
-          end: 80, //结束位置
+          start: zoomStart, //开始位置
+          end: zoomEnd, //结束位置
           radiusAxisIndex: 0,
           realtime: true, //实时显示
           handleIcon: "path://M306.1,413c0,2.2-1.8,4-4,4h-59.8c-2.2,0-4-1.8-4-4V200.8c0-2.2,1.8-4,4-4h59.8c2.2,0,4,1.8,4,4V413z",

@@ -4,7 +4,8 @@ import { connect } from 'react-redux'
 import { reqConvergentDeformationTime, reqConvergentDeformationPipe } from '../../../../request/api'
 
 export interface IConvergenceTransformTimeChartProps {
-  transformDate: string[]
+  transformDate: string[],
+  selectLoop: string
 }
 
 class ConvergenceTransformTimeChart extends React.Component<IConvergenceTransformTimeChartProps> {
@@ -26,8 +27,9 @@ class ConvergenceTransformTimeChart extends React.Component<IConvergenceTransfor
   }
 
   public startDrawChart = async () => {
-    const { transformDate } = this.props
-    const data = await reqConvergentDeformationTime('342', transformDate[0], transformDate[1])
+    const { transformDate, selectLoop } = this.props
+
+    const data = await reqConvergentDeformationTime(selectLoop, transformDate[0], transformDate[1])
     if (data.data.length === 0) return
     this.drawConvergenceTransformTimeChart(data.data)
   }
@@ -157,11 +159,11 @@ class ConvergenceTransformTimeChart extends React.Component<IConvergenceTransfor
 
   // 点击echart请求收敛分析图数据
   public clickEchartReqAnalyse = async (startTime: string) => {
+    const { selectLoop } = this.props
     // 存储数据至react-redux
     // @ts-ignore
     this.props.dispatch(async (dispatch) => {
-      const data = await reqConvergentDeformationPipe('342', startTime)
-      console.log('clickEchartReqAnalyse', data)
+      const data = await reqConvergentDeformationPipe(selectLoop, startTime)
       if (data.data.length === 0) return
       dispatch({ type: 'saveTransformData', payload: data.data })
     })
