@@ -10,20 +10,18 @@ import SinglePointChart from './components/SinglePointChart/SinglePointChart'
 
 const { TabPane } = Tabs
 
-export interface IAppProps {
-}
-
-export default class SubsideHistory extends React.Component<IAppProps> {
+export default class SubsideHistory extends React.Component {
   public state = {
-    allLeveeTimeTransformValue: {}, // 全部历史数据
-    leveeTimeTransformValue: {}, // 绘制的数据
+    allLeveeTimeTransformValue: {}, // 日期范围内全部历史数据
+    leveeTimeTransformValue: {}, // 当前绘制的数据
     zoomSlideValue: [],
     currentTabKey: 'maxOffset',
     tabsDates: ['2020-10-21 10:00:00', '2020-10-21 11:00:00'] // tabs标签选中的日期范围
   }
 
   public async componentDidMount() {
-    this.getHistory3D('2020-10-21 10:00:00', '2020-10-21 11:00:00')
+    const { tabsDates } = this.state
+    this.getHistory3D(tabsDates[0], tabsDates[1])
   }
 
   public getHistory3D = async (startTime: string, endTime: string) => {
@@ -55,6 +53,8 @@ export default class SubsideHistory extends React.Component<IAppProps> {
 
 
   public render() {
+    console.log('SubsideHistory render')
+
     const { leveeTimeTransformValue, zoomSlideValue, tabsDates } = this.state
     return (
       <div className="subside-history">

@@ -3,25 +3,34 @@ import * as echarts from 'echarts'
 import { reqLeveeHistoryMaxDisp } from '../../../../request/api'
 import style from '../../style/index.module.less'
 
-interface Props {
+interface IMaxOffsetChartProps {
   tabsDates: string[]
 }
-interface State {
 
-}
-
-export default class MaxOffsetChart extends Component<Props, State> {
+export default class MaxOffsetChart extends Component<IMaxOffsetChartProps> {
   myChart: any
 
-  public async componentDidUpdate() {
-    const { tabsDates } = this.props
-    const data = await reqLeveeHistoryMaxDisp(tabsDates[0], tabsDates[1])
-    if (!data.isSuccess) return
-    this.drawMaxOffsetChart(data.data)
+  public componentDidMount() {
+    this.startDrawChart()
+  }
+
+  public shouldComponentUpdate(nextProps: IMaxOffsetChartProps) {
+    return this.props.tabsDates !== nextProps.tabsDates
+  }
+
+  public componentDidUpdate() {
+    this.startDrawChart()
   }
 
   public componentWillUnmount() {
     window.removeEventListener('resize', this.resizeChart)
+  }
+
+  public startDrawChart = async () => {
+    const { tabsDates } = this.props
+    const data = await reqLeveeHistoryMaxDisp(tabsDates[0], tabsDates[1])
+    if (!data.isSuccess) return
+    this.drawMaxOffsetChart(data.data)
   }
 
   public resizeChart = () => {
@@ -153,6 +162,7 @@ export default class MaxOffsetChart extends Component<Props, State> {
   }
 
   render() {
+    console.log('max-offset-chart render')
     return (
       <div className={style['max-offset-chart']}></div>
     )

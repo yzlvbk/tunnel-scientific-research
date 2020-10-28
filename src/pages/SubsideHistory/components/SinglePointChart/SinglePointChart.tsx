@@ -21,6 +21,10 @@ export default class SinglePointChart extends React.Component<ISinglePointChartP
     this.startDrawChart()
   }
 
+  public shouldComponentUpdate(nextProps: ISinglePointChartProps) {
+    return this.props.tabsDates !== nextProps.tabsDates
+  }
+
   public async componentDidUpdate() {
     this.startDrawChart()
   }
@@ -157,6 +161,8 @@ export default class SinglePointChart extends React.Component<ISinglePointChartP
   }
 
   public render() {
+    console.log('single-point-chart render')
+
     return (
       <div className={style['single-point-chart']}></div>
     )
