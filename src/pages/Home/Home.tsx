@@ -41,7 +41,7 @@ export default class Home extends Component<RouteComponentProps> {
 
   componentDidMount() {
     // home页面，path='/'时，重定向至 /subsideMonitor
-    if (this.props.location.pathname === '/') this.props.history.push('/subsideMonitor')
+    if (this.props.location.pathname === '/' || this.props.location.pathname === '/TunnelSearch') this.props.history.push('/subsideMonitor')
     //监听窗口大小改变
     window.addEventListener('resize', debounce(this.handleResize, 100))
   }

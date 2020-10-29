@@ -9,3 +9,4 @@ declare module 'three-orbitcontrols' {
   const orbitcontrols: { 'three-orbitcontrols' };
   export default orbitcontrols;
 }
+

@@ -13,8 +13,8 @@ var params = {
 };
 var lut = new Lut();
 lut.setColorMap(params.colorMap);
-lut.setMax(2);
-lut.setMin(-12);
+lut.setMax(5);
+lut.setMin(-10);
 
 //  动态整合vertices
 var vertices: any[] = []
@@ -22,7 +22,7 @@ for (let i = 0; i < 186; i++) {
   const distance = i * 2 - 186
   vertices.push(new THREE.Vector3(distance, 0, -240))
   vertices.push(new THREE.Vector3(distance, 0, -40))
-  vertices.push(new THREE.Vector3(distance, 100, -40))
+  vertices.push(new THREE.Vector3(distance, 85, -40))
   vertices.push(new THREE.Vector3(distance, 100, 0))
   vertices.push(new THREE.Vector3(distance, 121, 0))
   vertices.push(new THREE.Vector3(distance, 148, -87))
@@ -304,7 +304,7 @@ export default class LeveeThreeD extends React.Component<ILeveeThreeDProps, ILev
       const distance = i * 2 - 186
       vertices.push(new THREE.Vector3(distance, 0, -240))
       vertices.push(new THREE.Vector3(distance, 0, -40))
-      vertices.push(new THREE.Vector3(distance, 100, -40))
+      vertices.push(new THREE.Vector3(distance, 85, -40))
       vertices.push(new THREE.Vector3(distance, 100, 0))
       vertices.push(new THREE.Vector3(distance, 121, 0))
       vertices.push(new THREE.Vector3(distance, 148, -87))
@@ -413,20 +413,13 @@ export default class LeveeThreeD extends React.Component<ILeveeThreeDProps, ILev
     const k = this.containerWidth / this.containerHeight
     const s = 200
     this.camera = new THREE.OrthographicCamera(-s * k, s * k, s, -s, -10000000, 10000000);
+
+
     this.camera.position.set(-100, 0, 0); //设置相机位置
     this.camera.lookAt(this.scene.position); //设置相机方向(指向的场景对象)
+    // this.controls.target = this.scene.position
     // 设置缩放大小
     this.camera.zoom = this.mouseZoom
-    console.log(this.camera)
-    console.log('camera', this.rotation)
-    // if (this.rotation) {
-    //   // this.camera.rotation.set(this.rotation.x, this.rotation.y, this.rotation.z)
-
-    //   -3.1415926535897
-    //   console.log('camera', this.rotation)
-    // }
-
-    // this.rotation && this.camera.rotation = this.rotation
 
     this.camera.updateProjectionMatrix()
   }
@@ -440,7 +433,7 @@ export default class LeveeThreeD extends React.Component<ILeveeThreeDProps, ILev
       canvas: this.container.querySelector('canvas')
     })
     this.renderer.setSize(this.containerWidth, this.containerHeight)
-    this.renderer.setClearColor(0xb9d3ff, 1)
+    // this.renderer.setClearColor(0xb9d3ff, 1)
     const render = () => {
       this.renderer.render(this.scene, this.camera)
       requestAnimationFrame(render)
@@ -448,7 +441,9 @@ export default class LeveeThreeD extends React.Component<ILeveeThreeDProps, ILev
     render()
     // @ts-ignore
     this.controls = new OrbitControls(this.camera, this.renderer.domElement)
-
+    // this.controls.object.rotateX(-1.2103692516250164)
+    // this.controls.object.rotateX(-0.6923162387594946)
+    // this.controls.object.rotateX(-1.0374361822135998)
     // 取消添加OrbitControls时的边框线
     this.renderer.domElement.removeAttribute('tabindex')
   }
@@ -465,6 +460,8 @@ export default class LeveeThreeD extends React.Component<ILeveeThreeDProps, ILev
     } = this.state
     this.scene = new THREE.Scene()
     this.group = new THREE.Group()
+    this.initLight()
+    this.drawLevee()
     this.initCamera()
     this.group.translateX(translateX)
     this.group.translateY(translateY)
@@ -473,8 +470,8 @@ export default class LeveeThreeD extends React.Component<ILeveeThreeDProps, ILev
     this.group.rotateY(rotateY * Math.PI / 180);
     this.group.rotateZ(rotateZ * Math.PI / 180);
     this.scene.add(this.group)
-    this.drawLevee()
-    this.initLight()
+
+
 
     this.initRenderer()
 

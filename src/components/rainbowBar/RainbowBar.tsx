@@ -8,12 +8,12 @@ interface Props {
 export default function RainbowBar(props: Props): ReactElement {
   return (
     <div className={style['rainbow-bar']}>
+      <span className={style['rainbow-bar-item']}>50</span>
       <span className={style['rainbow-bar-item']}>20</span>
-      <span className={style['rainbow-bar-item']}>-8</span>
-      <span className={style['rainbow-bar-item']}>-36</span>
-      <span className={style['rainbow-bar-item']}>-64</span>
-      <span className={style['rainbow-bar-item']}>-94</span>
-      <span className={style['rainbow-bar-item']}>-120</span>
+      <span className={style['rainbow-bar-item']}>-10</span>
+      <span className={style['rainbow-bar-item']}>-40</span>
+      <span className={style['rainbow-bar-item']}>-70</span>
+      <span className={style['rainbow-bar-item']}>-100</span>
     </div>
   )
 }

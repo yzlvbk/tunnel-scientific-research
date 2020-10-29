@@ -2,6 +2,7 @@
   "name": "tunnel-research",
   "version": "0.1.0",
   "private": true,
+  "homepage": "/TunnelSearch",
   "dependencies": {
     "@babel/plugin-proposal-decorators": "^7.12.1",
     "@testing-library/jest-dom": "^4.2.4",
@@ -19,11 +20,13 @@
     "antd": "^4.7.0",
     "axios": "^0.20.0",
     "babel-plugin-transform-decorators-legacy": "^1.3.5",
+    "css-loader": "^5.0.0",
     "echarts": "^4.9.0",
     "less": "^3.12.2",
     "less-loader": "^7.0.2",
     "react": "^16.13.1",
     "react-app-rewire-css-modules": "^1.0.0",
+    "react-app-rewire-less-modules": "^1.3.0",
     "react-app-rewired": "2.0.2-next.0",
     "react-dom": "^16.13.1",
     "react-redux": "^7.2.1",
@@ -56,8 +59,5 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  },
-  "devDependencies": {
-    "react-app-rewire-less-modules": "^1.3.0"
   }
 }
