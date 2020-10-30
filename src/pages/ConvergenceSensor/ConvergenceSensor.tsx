@@ -68,7 +68,7 @@ export default class ConvergenceSensor extends Component<Props, State> {
     return (
       <div>
         <Card title="传感器信息">
-          <Table columns={sensorBaseColumns} dataSource={sensorDeformData} pagination={{ defaultPageSize: 50 }} scroll={{ y: 640 }} />
+          <Table columns={sensorBaseColumns} dataSource={sensorDeformData} pagination={{ defaultPageSize: 50 }} scroll={{ y: 440 }} />
         </Card>
       </div>
     )

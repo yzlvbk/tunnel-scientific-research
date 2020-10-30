@@ -492,7 +492,7 @@ export default class LeveeThreeD extends React.Component<ILeveeThreeDProps, ILev
   public initRenderer = () => {
     // @ts-ignore
     this.renderer = new THREE.WebGLRenderer({
-      antialias: false,
+      antialias: true,
       alpha: true,
       // @ts-ignore
       canvas: this.container.querySelector('canvas')
