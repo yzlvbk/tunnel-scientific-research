@@ -403,6 +403,37 @@ export default class LeveeThreeD extends React.Component<ILeveeThreeDProps, ILev
     this.group.add(mesh) //管道网格模型添加到场景中
   }
 
+  public initText = () => {
+    var canvas = document.createElement("canvas");
+    var context = canvas.getContext("2d")
+    canvas.width = 250
+    canvas.height = 250
+    context!.scale(2, 2)
+    // drawRect(context); // 绘制矩形
+    /* 字体颜色 */
+    context!.fillStyle = "rgba(0,0,0,1)"
+    context!.font = "16px bold"
+    /**文字 */
+    context!.fillText("E0", 60, 60)
+
+    /* 填充颜色 */
+    // context!.strokeStyle = "#0864ee"
+    // context!.strokeRect(0, 0, 680, 670)
+    // context!.fillStyle = "rgba(10,18,51,0.8)"
+    // context!.fillRect(1, 1, 678, 668)
+
+    var texture = new THREE.Texture(canvas) // 将canvas作为纹理
+    texture.needsUpdate = true
+
+    var spriteMaterial = new THREE.SpriteMaterial({ map: texture })
+    var sprite = new THREE.Sprite(spriteMaterial)
+    sprite.scale.set(150, 150, 150) //大小缩放
+    sprite.position.set(-183, 100, 0) //位置
+
+    this.group.add(sprite)
+
+  }
+
   public initLight = () => {
     // 方向光
     var directionalLight = new THREE.DirectionalLight(0xffffff, 0.5);
@@ -482,6 +513,7 @@ export default class LeveeThreeD extends React.Component<ILeveeThreeDProps, ILev
     this.initLight()
     this.drawLevee()
     this.drawTunnels()
+    this.initText()
     this.initCamera()
     this.group.translateX(translateX)
     this.group.translateY(translateY)
