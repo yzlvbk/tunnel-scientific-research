@@ -384,6 +384,25 @@ export default class LeveeThreeD extends React.Component<ILeveeThreeDProps, ILev
     })
   }
 
+  public drawTunnels = () => {
+    //创建管道成型的路径(3D样条曲线)
+    const path = new THREE.CatmullRomCurve3([
+      new THREE.Vector3(125, 0, -150),
+      new THREE.Vector3(125, 159, -150),
+    ])
+
+    // path:路径   40：沿着轨迹细分数  2：管道半径   25：管道截面圆细分数
+    const geometry = new THREE.TubeGeometry(path, 40, 20, 25)
+
+    const material = new THREE.MeshPhongMaterial({
+      color: 0x00ff00,
+      side: THREE.DoubleSide //两面可见
+    }) //材质对象
+
+    var mesh = new THREE.Mesh(geometry, material); //管道网格模型对象
+    this.group.add(mesh) //管道网格模型添加到场景中
+  }
+
   public initLight = () => {
     // 方向光
     var directionalLight = new THREE.DirectionalLight(0xffffff, 0.5);
@@ -462,6 +481,7 @@ export default class LeveeThreeD extends React.Component<ILeveeThreeDProps, ILev
     this.group = new THREE.Group()
     this.initLight()
     this.drawLevee()
+    this.drawTunnels()
     this.initCamera()
     this.group.translateX(translateX)
     this.group.translateY(translateY)
