@@ -152,6 +152,7 @@ const buildRiverBase = (group: any) => {
   //材质对象
   var material = new THREE.MeshPhongMaterial({
     color: 'blue', //三角面颜色
+    opacity: 0.8,
     side: THREE.DoubleSide //两面可见
   });
   var mesh = new THREE.Mesh(geometry, material); //网格模型对象Mesh
@@ -277,12 +278,12 @@ export default class LeveeThreeD extends React.Component<ILeveeThreeDProps, ILev
   rotation: any // 上次旋转
   // -0.6022259865823375, _y: 0.7202738569808437, _z: 0.4256851453949111
   public state = {
-    translateX: 80,
-    translateY: 150,
-    translateZ: 0,
+    translateX: -60,
+    translateY: 90,
+    translateZ: 60,
     rotateX: -90,
-    rotateY: 0,
-    rotateZ: 90
+    rotateY: -10,
+    rotateZ: -45
   }
 
   public componentDidMount() {
@@ -385,53 +386,69 @@ export default class LeveeThreeD extends React.Component<ILeveeThreeDProps, ILev
   }
 
   public drawTunnels = () => {
-    //创建管道成型的路径(3D样条曲线)
-    const path = new THREE.CatmullRomCurve3([
+    //西线
+    const pathWest = new THREE.CatmullRomCurve3([
       new THREE.Vector3(125, 0, -150),
       new THREE.Vector3(125, 159, -150),
     ])
+    //东线
+    const pathEast = new THREE.CatmullRomCurve3([
+      new THREE.Vector3(-125, 0, -150),
+      new THREE.Vector3(-125, 159, -150),
+    ])
 
     // path:路径   40：沿着轨迹细分数  2：管道半径   25：管道截面圆细分数
-    const geometry = new THREE.TubeGeometry(path, 40, 20, 25)
+    const geometryWest = new THREE.TubeGeometry(pathWest, 40, 20, 25)
+    const geometryEast = new THREE.TubeGeometry(pathEast, 40, 20, 25)
 
     const material = new THREE.MeshPhongMaterial({
       color: 0x00ff00,
       side: THREE.DoubleSide //两面可见
     }) //材质对象
 
-    var mesh = new THREE.Mesh(geometry, material); //管道网格模型对象
-    this.group.add(mesh) //管道网格模型添加到场景中
+    var meshWest = new THREE.Mesh(geometryWest, material); //管道网格模型对象
+    var meshEast = new THREE.Mesh(geometryEast, material); //管道网格模型对象
+    this.group.add(meshWest)
+    this.group.add(meshEast)
   }
 
   public initText = () => {
-    var canvas = document.createElement("canvas");
-    var context = canvas.getContext("2d")
-    canvas.width = 250
-    canvas.height = 250
-    context!.scale(2, 2)
-    // drawRect(context); // 绘制矩形
-    /* 字体颜色 */
-    context!.fillStyle = "rgba(0,0,0,1)"
-    context!.font = "16px bold"
-    /**文字 */
-    context!.fillText("E0", 60, 60)
+    /* 创建canvas并输入文字 */
+    function createText(text: string) {
+      var canvas = document.createElement("canvas");
+      var context = canvas.getContext("2d")
+      canvas.width = 250
+      canvas.height = 250
+      context!.scale(2, 2)
+      // drawRect(context); // 绘制矩形
+      /* 字体颜色 */
+      context!.fillStyle = "rgba(0,0,0,1)"
+      context!.font = "16px bold"
+      /**文字 */
+      context!.fillText(text, 50, 60)
 
-    /* 填充颜色 */
-    // context!.strokeStyle = "#0864ee"
-    // context!.strokeRect(0, 0, 680, 670)
-    // context!.fillStyle = "rgba(10,18,51,0.8)"
-    // context!.fillRect(1, 1, 678, 668)
+      /* 填充颜色 */
+      // context!.strokeStyle = "#0864ee"
+      // context!.strokeRect(0, 0, 680, 670)
+      // context!.fillStyle = "rgba(10,18,51,0.8)"
+      // context!.fillRect(1, 1, 678, 668)
+      return canvas
+    }
 
-    var texture = new THREE.Texture(canvas) // 将canvas作为纹理
-    texture.needsUpdate = true
+    const createSprite = (textCanvas: any, x: number, y: number, z: number) => {
+      var texture = new THREE.Texture(textCanvas) // 将canvas作为纹理
+      texture.needsUpdate = true
+      var spriteMaterial = new THREE.SpriteMaterial({ map: texture })
+      var sprite = new THREE.Sprite(spriteMaterial)
+      sprite.scale.set(150, 150, 150) //大小缩放
+      sprite.position.set(x, y, z) //位置
+      this.group.add(sprite)
+    }
+    const eastTextCanva = createText('东')
+    createSprite(eastTextCanva, -183, 100, 0)
 
-    var spriteMaterial = new THREE.SpriteMaterial({ map: texture })
-    var sprite = new THREE.Sprite(spriteMaterial)
-    sprite.scale.set(150, 150, 150) //大小缩放
-    sprite.position.set(-183, 100, 0) //位置
-
-    this.group.add(sprite)
-
+    const westTextCanva = createText('西')
+    createSprite(westTextCanva, 183, 100, 0)
   }
 
   public initLight = () => {
@@ -464,10 +481,8 @@ export default class LeveeThreeD extends React.Component<ILeveeThreeDProps, ILev
     const s = 200
     this.camera = new THREE.OrthographicCamera(-s * k, s * k, s, -s, -10000000, 10000000);
 
-
     this.camera.position.set(-100, 0, 0); //设置相机位置
     this.camera.lookAt(this.scene.position); //设置相机方向(指向的场景对象)
-    // this.controls.target = this.scene.position
     // 设置缩放大小
     this.camera.zoom = this.mouseZoom
 
@@ -491,15 +506,12 @@ export default class LeveeThreeD extends React.Component<ILeveeThreeDProps, ILev
     render()
     // @ts-ignore
     this.controls = new OrbitControls(this.camera, this.renderer.domElement)
-    // this.controls.object.rotateX(-1.2103692516250164)
-    // this.controls.object.rotateX(-0.6923162387594946)
-    // this.controls.object.rotateX(-1.0374361822135998)
+    this.camera.updateProjectionMatrix()
     // 取消添加OrbitControls时的边框线
     this.renderer.domElement.removeAttribute('tabindex')
   }
 
   public initThree = () => {
-    this.controls && this.controls.reset()
     const {
       translateX,
       translateY,
@@ -518,21 +530,20 @@ export default class LeveeThreeD extends React.Component<ILeveeThreeDProps, ILev
     this.group.translateX(translateX)
     this.group.translateY(translateY)
     this.group.translateZ(translateZ)
-    this.group.rotateX(rotateX * Math.PI / 180);
-    this.group.rotateY(rotateY * Math.PI / 180);
-    this.group.rotateZ(rotateZ * Math.PI / 180);
+    this.group.rotateX(rotateX * Math.PI / 180)
+    this.group.rotateY(rotateY * Math.PI / 180)
+    this.group.rotateZ(rotateZ * Math.PI / 180)
+
     this.scene.add(this.group)
-
-
-
     this.initRenderer()
+
 
     // 监听鼠标滚动缩放事件
     this.container.querySelector('canvas').addEventListener('wheel', this.mouseWheelFuc(), false)
     this.container.querySelector('canvas').addEventListener('click', () => {
-      // this.controls.saveState()
+      this.controls.saveState()
       this.rotation = this.controls.object.rotation
-      console.log('click', this.rotation)
+      console.log('click', this.controls.object)
 
       // this.position0 = this.controls.object.position
       // this.zoom0 = this.controls.object.zoom
