@@ -57,12 +57,17 @@ export default class Home extends Component<RouteComponentProps> {
           <div className={home.sider}>
             <SideMenu collapsed={this.state.collapsed} />
             {collapsed ? <MenuUnfoldOutlined className={home.trigger} onClick={this.toggle} /> : <MenuFoldOutlined className={home.trigger} onClick={this.toggle} />}
+
+            {!collapsed && <div className={home.company}>
+              <div>联系我们: 025-58062818</div>
+              <div>官方网址: <a href="http://www.strdal.com/" style={{ color: 'inherit' }} target="_blank" rel="noopener noreferrer">www.strdal.com</a></div>
+            </div>}
           </div>
         </Sider>
 
         <Layout style={{ position: 'relative' }}>
           {/* 头部区域 */}
-          <Header style={{ position: 'fixed', top: 0, backgroundColor: '#fff', padding: 0, width: '100%', height: 48, zIndex: 100 }}></Header>
+          <Header className={home.header}>大直径隧道施工监测中盾构与管片结构的数据融合及系统化——大堤沉降监测系统</Header>
 
           {/* 内容区域 */}
           <Content className={home.content}>

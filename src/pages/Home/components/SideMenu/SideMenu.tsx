@@ -77,7 +77,7 @@ class SideMenu extends Component<SideMenuProps> {
         {/* logo和title */}
         <div className={SideMenuLess['side-menu']}>
           <img className={SideMenuLess.logo} src={logo} alt="" />
-          {!collapsed && <span style={{ marginLeft: 10 }}>隧道科研</span>}
+          {!collapsed && <span style={{ marginLeft: 10 }}><a href="http://www.strdal.com/" style={{ color: 'inherit' }} target="_blank" rel="noopener noreferrer">仕达得尔</a></span>}
         </div>
 
         {/* 导航菜单 */}

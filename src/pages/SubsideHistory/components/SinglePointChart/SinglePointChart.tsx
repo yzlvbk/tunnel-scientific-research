@@ -1,7 +1,10 @@
 import * as React from 'react'
 import * as echarts from 'echarts'
+import { Select } from 'antd'
 import { reqLeveeHistorySingle } from '../../../../request/api'
 import style from '../../style/index.module.less'
+
+const { Option } = Select
 
 export interface ISinglePointChartProps {
   tabsDates: string[]
@@ -10,9 +13,21 @@ export interface ISinglePointChartProps {
 export default class SinglePointChart extends React.Component<ISinglePointChartProps> {
   myChart: any
 
+  public state = {
+    selectDistance: '0.5' // 单点测点位移，默认0.5m
+  }
+
+  public selectDidtanceChange = (value: any) => {
+    console.log(`selected ${value}`)
+    this.setState({ selectDistance: value }, () => {
+      this.startDrawChart()
+    })
+  }
+
   public startDrawChart = async () => {
     const { tabsDates } = this.props
-    const data = await reqLeveeHistorySingle(tabsDates[0], tabsDates[1], '0.5')
+    const { selectDistance } = this.state
+    const data = await reqLeveeHistorySingle(tabsDates[0], tabsDates[1], selectDistance)
     if (!data.isSuccess) return
     this.drawSinglePointChart(data.data)
   }
@@ -38,6 +53,7 @@ export default class SinglePointChart extends React.Component<ISinglePointChartP
   }
 
   public drawSinglePointChart = (maxOffsetData: { x: [], y: [] }) => {
+    const { selectDistance } = this.state
     const { x, y } = maxOffsetData
     // 定义颜色
     var fontColor = "#1890ff"
@@ -54,7 +70,7 @@ export default class SinglePointChart extends React.Component<ISinglePointChartP
     const option = {
       color: ['#333'], // 线条颜色
       title: {
-        text: '大堤单点位移图',
+        text: `大堤${selectDistance}米点位移图`,
         left: 'center'
       },
       tooltip: {
@@ -164,7 +180,18 @@ export default class SinglePointChart extends React.Component<ISinglePointChartP
     console.log('single-point-chart render')
 
     return (
-      <div className={style['single-point-chart']}></div>
+      <>
+        <div>
+          <Select defaultValue="0.5" style={{ width: 120 }} onChange={this.selectDidtanceChange}>
+            <Option value="0.5">0.5m</Option>
+            <Option value="1">1m</Option>
+            <Option value="2">2m</Option>
+            <Option value="5">5m</Option>
+          </Select>
+        </div>
+        <div className={style['single-point-chart']}></div>
+      </>
+
     )
   }
 }

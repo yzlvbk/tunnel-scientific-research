@@ -88,6 +88,7 @@ class ConvergenceTransformTimeChart extends React.Component<IConvergenceTransfor
         name: '变形(mm)',
         type: 'value',
         splitNumber: 5,
+        min: -30,
         axisLine: {
           show: true
         },
