@@ -31,6 +31,8 @@ class ConvergenceTransformTimeChart extends React.Component<IConvergenceTransfor
 
     const data = await reqConvergentDeformationTime(selectLoop, transformDate[0], transformDate[1])
     if (data.data.length === 0) return
+
+
     this.drawConvergenceTransformTimeChart(data.data)
   }
 
@@ -47,7 +49,7 @@ class ConvergenceTransformTimeChart extends React.Component<IConvergenceTransfor
     const option = {
       color: ['#333'], // 线条颜色
       title: {
-        text: '大堤实时沉降图',
+        text: '收敛变形图',
         left: 'center'
       },
       tooltip: {

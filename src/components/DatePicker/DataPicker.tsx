@@ -13,6 +13,8 @@ export default class DatePickerComponent extends React.Component<IDatePickerProp
   public dateChange = (value: any, dateString: any) => {
     const { dateChangeFromSon } = this.props
     dateChangeFromSon(dateString)
+    console.log('dateChange')
+
   }
 
 
@@ -33,6 +35,10 @@ export default class DatePickerComponent extends React.Component<IDatePickerProp
             defaultValue={[moment('2020-10-21 10:00'), moment('2020-10-21 11:00')]}
             showTime={{ format: 'HH:mm' }}
             format="YYYY-MM-DD HH:mm"
+            ranges={{
+              Today: [moment().startOf('day'), moment().endOf('day')],
+              'This Month': [moment().startOf('month'), moment().endOf('month')],
+            }}
             disabledDate={this.disabledDate}
             onChange={this.dateChange}
           />
