@@ -70,7 +70,7 @@ export default class SinglePointChart extends React.Component<ISinglePointChartP
     const option = {
       color: ['#333'], // 线条颜色
       title: {
-        text: `大堤${selectDistance}米点位移图`,
+        text: `大堤${selectDistance}米点沉降图`,
         left: 'center'
       },
       tooltip: {

@@ -13,8 +13,6 @@ export default class DatePickerComponent extends React.Component<IDatePickerProp
   public dateChange = (value: any, dateString: any) => {
     const { dateChangeFromSon } = this.props
     dateChangeFromSon(dateString)
-    console.log('dateChange')
-
   }
 
 

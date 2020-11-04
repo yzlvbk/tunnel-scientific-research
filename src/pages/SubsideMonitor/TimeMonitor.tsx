@@ -49,7 +49,7 @@ class SubSideMonitor extends React.Component<{}> {
 
     return (
       <div className="monitor">
-        <Card title="大提实时3D模型" className="three-d-model">
+        <Card title="大堤实时3D模型" className="three-d-model">
           <RainbowBar />
           <LeveeThreeD leveeTimeTransformValue={leveeTimeTransformValue} />
         </Card>
