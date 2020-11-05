@@ -5,6 +5,8 @@ import style from '../../style/index.module.less'
 
 interface IMaxOffsetChartProps {
   tabsDates: string[]
+  clickChart: any
+  currentTabKey: string // 当前选中tab项
 }
 
 export default class MaxOffsetChart extends Component<IMaxOffsetChartProps> {
@@ -15,7 +17,7 @@ export default class MaxOffsetChart extends Component<IMaxOffsetChartProps> {
   }
 
   public shouldComponentUpdate(nextProps: IMaxOffsetChartProps) {
-    return this.props.tabsDates !== nextProps.tabsDates
+    return (nextProps.currentTabKey === 'maxOffset' && this.props.tabsDates !== nextProps.tabsDates) || this.props.currentTabKey !== nextProps.currentTabKey
   }
 
   public componentDidUpdate() {
@@ -158,11 +160,16 @@ export default class MaxOffsetChart extends Component<IMaxOffsetChartProps> {
     // 立即执行resize，否则刷新页面，echarts宽度多处200px
     setTimeout(() => {
       this.myChart.resize()
-    }, 100);
+    }, 100)
+
+    // 注册点击echarts事件
+    this.myChart.on('click', (params: any) => {
+      // 通知父组件chart点击事件
+      this.props.clickChart(params.name)
+    })
   }
 
   render() {
-    console.log('max-offset-chart render')
     return (
       <div className={style['max-offset-chart']}></div>
     )

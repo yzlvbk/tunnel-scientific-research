@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Card, Tabs } from 'antd'
+import { Card, Tabs, Spin } from 'antd'
 import { reqLevee3DHistory } from '../../request/api'
 import LeveeThreeD from '../../components/LeveeThreeD/LeveeThreeD'
 import RainbowBar from '../../components/rainbowBar/RainbowBar'
@@ -16,7 +16,9 @@ export default class SubsideHistory extends React.Component {
     leveeTimeTransformValue: {}, // 当前绘制的数据
     zoomSlideValue: [],
     currentTabKey: 'maxOffset',
-    tabsDates: ['2020-10-21 10:00:00', '2020-10-21 11:00:00'] // tabs标签选中的日期范围
+    tabsDates: ['2020-10-21 10:00:00', '2020-10-21 11:00:00'], // tabs标签选中的日期范围
+    spinVisible: false, // 3D请求数据时加载icon
+    selectValuetoSon: 0 // 传给子组件zoomslide的选中值
   }
 
   public async componentDidMount() {
@@ -29,52 +31,68 @@ export default class SubsideHistory extends React.Component {
     if (Object.keys(data.data).length === 0) return
     const zoomSlideValue = Object.keys(data.data)
     const leveeTimeTransformValue = data.data[Object.keys(data.data)[0]] // 默认绘制第一条数据
-    this.setState({ allLeveeTimeTransformValue: data.data, leveeTimeTransformValue, zoomSlideValue })
-    console.log('end');
-
+    this.setState({ allLeveeTimeTransformValue: data.data, leveeTimeTransformValue, zoomSlideValue, spinVisible: false, selectValuetoSon: 0 })
   }
 
   public threeDSlideChangeFormSon = (data: any) => {
+    const { zoomSlideValue, selectValuetoSon } = this.state
+    const index = zoomSlideValue.findIndex(item => {
+      return item === data
+    })
+    if (index !== selectValuetoSon) {
+      this.setState({ selectValuetoSon: index })
+    }
+
     const leveeTimeTransformValue = this.state.allLeveeTimeTransformValue[data]
     this.setState({ leveeTimeTransformValue })
   }
 
   public threeDDateChangeFromSon = async (dates: any) => {
+    this.setState({ spinVisible: true, tabsDates: dates })
     this.getHistory3D(dates[0], dates[1])
-  }
-
-  public tabsDateChangeFromSon = (dates: any) => {
-    this.setState({ tabsDates: dates })
   }
 
   public tabsChange = (key: any) => {
     this.setState({ currentTabKey: key })
+    this.forceUpdate()
   }
 
+  // 监听子组件点击最大位移chart
+  public clickChart = (name: any) => {
+    const { zoomSlideValue } = this.state
+    const index = zoomSlideValue.findIndex(item => {
+      return item === name
+    })
+
+    const leveeTimeTransformValue = this.state.allLeveeTimeTransformValue[name]
+    leveeTimeTransformValue && this.setState({ leveeTimeTransformValue, selectValuetoSon: index })
+  }
 
   public render() {
-    console.log('SubsideHistory render')
+    const { leveeTimeTransformValue, zoomSlideValue, tabsDates, spinVisible, selectValuetoSon, currentTabKey } = this.state
 
-    const { leveeTimeTransformValue, zoomSlideValue, tabsDates } = this.state
+    console.log('history render')
+
     return (
       <div className="subside-history">
         <Card title="大提历史3D模型">
           <RainbowBar />
-          <LeveeThreeD leveeTimeTransformValue={leveeTimeTransformValue} />
-          <ZoomSlider slideChangeFormSon={this.threeDSlideChangeFormSon.bind(this)} zoomSlideValue={zoomSlideValue} />
           <DatePicker dateChangeFromSon={this.threeDDateChangeFromSon.bind(this)} />
+          <Spin spinning={spinVisible} tip="正在加载...">
+            <LeveeThreeD leveeTimeTransformValue={leveeTimeTransformValue} />
+            <ZoomSlider selectValueFromFather={selectValuetoSon} slideChangeFormSon={this.threeDSlideChangeFormSon.bind(this)} zoomSlideValue={zoomSlideValue} />
+          </Spin>
         </Card>
 
-        <Card title="大提历史数据图">
+        <Card>
           <Tabs defaultActiveKey="maxOffset"
-            tabBarExtraContent={<DatePicker dateChangeFromSon={this.tabsDateChangeFromSon.bind(this)} />}
             onChange={this.tabsChange}>
             <TabPane tab="最大位移" key="maxOffset">
-              <MaxOffsetChart tabsDates={tabsDates} />
+              <MaxOffsetChart tabsDates={tabsDates} clickChart={this.clickChart.bind(this)} currentTabKey={currentTabKey} />
             </TabPane>
 
             <TabPane tab="单个测点数据" key="singlePoint">
-              <SinglePointChart tabsDates={tabsDates} />
+              <SinglePointChart tabsDates={tabsDates} currentTabKey={currentTabKey} />
             </TabPane>
           </Tabs>
         </Card>

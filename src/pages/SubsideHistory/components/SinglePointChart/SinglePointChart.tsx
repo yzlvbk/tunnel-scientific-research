@@ -8,6 +8,7 @@ const { Option } = Select
 
 export interface ISinglePointChartProps {
   tabsDates: string[]
+  currentTabKey: string // 当前选中tab项
 }
 
 export default class SinglePointChart extends React.Component<ISinglePointChartProps> {
@@ -37,7 +38,7 @@ export default class SinglePointChart extends React.Component<ISinglePointChartP
   }
 
   public shouldComponentUpdate(nextProps: ISinglePointChartProps) {
-    return this.props.tabsDates !== nextProps.tabsDates
+    return (nextProps.currentTabKey === 'singlePoint' && this.props.tabsDates !== nextProps.tabsDates) || this.props.currentTabKey !== nextProps.currentTabKey
   }
 
   public async componentDidUpdate() {

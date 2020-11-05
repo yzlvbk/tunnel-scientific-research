@@ -3,10 +3,10 @@ import * as THREE from 'three'
 import { Lut } from './Lut';
 import OrbitControls from 'three-orbitcontrols'
 import style from './index.module.less'
-import frontView from './three-d-icon/frontView.png'
-import obliqueView from './three-d-icon/obliqueView.png'
-import sideView from './three-d-icon/sideView.png'
-import topView from './three-d-icon/topView.png'
+// import frontView from './three-d-icon/frontView.png'
+// import obliqueView from './three-d-icon/obliqueView.png'
+// import sideView from './three-d-icon/sideView.png'
+// import topView from './three-d-icon/topView.png'
 
 var params = {
   colorMap: 'rainbow',
@@ -19,7 +19,7 @@ lut.setMin(-10);
 //  动态整合vertices
 var vertices: any[] = []
 for (let i = 0; i < 186; i++) {
-  const distance = i * 2 - 186
+  const distance = (i * 2 - 186) * 3.5
   vertices.push(new THREE.Vector3(distance, 0, -240))
   vertices.push(new THREE.Vector3(distance, 0, -40))
   vertices.push(new THREE.Vector3(distance, 85, -40))
@@ -29,6 +29,7 @@ for (let i = 0; i < 186; i++) {
   vertices.push(new THREE.Vector3(distance, 159, -87))
   vertices.push(new THREE.Vector3(distance, 159, -240))
 }
+
 // 4个点生成2个三角形
 const buildTriangle = (a: number, b: number, c: number, d: number) => {
   return [b, a, c, b, d, c]
@@ -276,14 +277,14 @@ export default class LeveeThreeD extends React.Component<ILeveeThreeDProps, ILev
   controls: any
   mouseZoom: number = 1
   rotation: any // 上次旋转
-  // -0.6022259865823375, _y: 0.7202738569808437, _z: 0.4256851453949111
+
   public state = {
-    translateX: -60,
-    translateY: 90,
-    translateZ: 60,
+    translateX: 80,
+    translateY: 120,
+    translateZ: 0,
     rotateX: -90,
-    rotateY: -10,
-    rotateZ: -45
+    rotateY: 1,
+    rotateZ: 90
   }
 
   public componentDidMount() {
@@ -302,7 +303,7 @@ export default class LeveeThreeD extends React.Component<ILeveeThreeDProps, ILev
     //  动态整合vertices
     vertices = []
     for (let i = 0; i < 186; i++) {
-      const distance = i * 2 - 186
+      const distance = (i * 2 - 186) * 3.5
       vertices.push(new THREE.Vector3(distance, 0, -240))
       vertices.push(new THREE.Vector3(distance, 0, -40))
       vertices.push(new THREE.Vector3(distance, 85, -40))
@@ -316,7 +317,7 @@ export default class LeveeThreeD extends React.Component<ILeveeThreeDProps, ILev
     const { leveeTimeTransformValue } = this.props
     for (let i = 0, x = Object.keys(leveeTimeTransformValue).length / 2; i < x; i += 0.5) {
       const index = i * 2
-      const distance = index * 2 - 186
+      const distance = (index * 2 - 186) * 3.5
       const zoomItem = leveeTimeTransformValue[i] / 10 // 将沉降值 / 10
       if (vertices[(index * 8 + 3)] && vertices[(index * 8 + 4)]) {
         vertices.splice((index * 8 + 3), 1, (new THREE.Vector3(distance, 100, zoomItem)))
@@ -388,18 +389,18 @@ export default class LeveeThreeD extends React.Component<ILeveeThreeDProps, ILev
   public drawTunnels = () => {
     //西线
     const pathWest = new THREE.CatmullRomCurve3([
-      new THREE.Vector3(125, 0, -150),
-      new THREE.Vector3(125, 159, -150),
+      new THREE.Vector3(437.5, 0, -175),
+      new THREE.Vector3(437.5, 159, -175),
     ])
     //东线
     const pathEast = new THREE.CatmullRomCurve3([
-      new THREE.Vector3(-125, 0, -150),
-      new THREE.Vector3(-125, 159, -150),
+      new THREE.Vector3(-437.5, 0, -175),
+      new THREE.Vector3(-437.5, 159, -175),
     ])
 
     // path:路径   40：沿着轨迹细分数  2：管道半径   25：管道截面圆细分数
-    const geometryWest = new THREE.TubeGeometry(pathWest, 40, 20, 25)
-    const geometryEast = new THREE.TubeGeometry(pathEast, 40, 20, 25)
+    const geometryWest = new THREE.TubeGeometry(pathWest, 40, 40, 25)
+    const geometryEast = new THREE.TubeGeometry(pathEast, 40, 40, 25)
 
     const material = new THREE.MeshPhongMaterial({
       color: 0x00ff00,
@@ -445,10 +446,10 @@ export default class LeveeThreeD extends React.Component<ILeveeThreeDProps, ILev
       this.group.add(sprite)
     }
     const eastTextCanva = createText('东')
-    createSprite(eastTextCanva, -183, 100, 0)
+    createSprite(eastTextCanva, -640.5, 100, 5)
 
     const westTextCanva = createText('西')
-    createSprite(westTextCanva, 183, 100, 0)
+    createSprite(westTextCanva, 630.5, 100, 5)
   }
 
   public initLight = () => {
@@ -472,8 +473,8 @@ export default class LeveeThreeD extends React.Component<ILeveeThreeDProps, ILev
     // scene.add(directionalLightHelper)
 
     // 辅助坐标系   老版本AxisHelper 新版本AxesHelper
-    // var axisHelper = new THREE.AxesHelper(1000)
-    // this.scene.add(axisHelper)
+    //   var axisHelper = new THREE.AxesHelper(1000)
+    //   this.scene.add(axisHelper)
   }
 
   public initCamera = () => {
@@ -506,7 +507,7 @@ export default class LeveeThreeD extends React.Component<ILeveeThreeDProps, ILev
     render()
     // @ts-ignore
     this.controls = new OrbitControls(this.camera, this.renderer.domElement)
-    this.camera.updateProjectionMatrix()
+    this.controls.enabled = false
     // 取消添加OrbitControls时的边框线
     this.renderer.domElement.removeAttribute('tabindex')
   }
@@ -584,12 +585,12 @@ export default class LeveeThreeD extends React.Component<ILeveeThreeDProps, ILev
   public render() {
     return (
       <div className={style['levee-threeD-warp']}>
-        <section className={style['three-d-icon']}>
+        {/* <section className={style['three-d-icon']}>
           <span className={style['three-d-icon-item']} onClick={() => this.changeView(80, 150, 0, -90, 0, 90)}><img src={frontView} alt='' /></span>
           <span className={style['three-d-icon-item']} onClick={() => this.changeView(-30, 120, 60, -90, 0, -45)}><img src={obliqueView} alt='' /></span>
           <span className={style['three-d-icon-item']} onClick={() => this.changeView(0, 150, 90, -90, 0, 0)}><img src={sideView} alt='' /></span>
           <span className={style['three-d-icon-item']} onClick={() => this.changeView(-150, 80, 0, -90, -90, 90)}><img src={topView} alt='' /></span>
-        </section>
+        </section> */}
 
         <canvas></canvas>
       </div>
