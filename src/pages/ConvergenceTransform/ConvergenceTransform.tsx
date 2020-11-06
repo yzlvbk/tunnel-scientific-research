@@ -33,8 +33,8 @@ export default class ConvergenceTransform extends React.Component<IConvergenceTr
   public render() {
     const { transformDate, slideValue, selectLoop } = this.state
     return (
-      <div>
-        <Card title="收敛分析图">
+      <div className={style['convergence-transform']}>
+        <Card title="收敛分析图" className={style['convergence-transform-item']}>
           <Select defaultValue="342" style={{ width: 120 }} onChange={this.selectChange}>
             <Option value="342">342环</Option>
             <Option value="1045" >东线1045环</Option>
@@ -51,11 +51,11 @@ export default class ConvergenceTransform extends React.Component<IConvergenceTr
           </div>
         </Card>
 
-        <Card title="收敛变形图">
+        <Card title="收敛变形图" className={style['convergence-transform-item']}>
           <DatePicker dateChangeFromSon={this.TransformDateChangeFromSon.bind(this)} />
           <ConvergenceTransformTimeChart transformDate={transformDate} selectLoop={selectLoop} />
         </Card>
       </div>
-    );
+    )
   }
 }

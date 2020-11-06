@@ -57,7 +57,7 @@ class ConvergenceTransformTimeChart extends React.Component<IConvergenceTransfor
       },
       grid: {
         left: '3%',
-        right: '8%',
+        right: '9%',
         bottom: '3%',
         containLabel: true
       },
@@ -174,7 +174,7 @@ class ConvergenceTransformTimeChart extends React.Component<IConvergenceTransfor
 
   public render() {
     return (
-      <div style={{ height: 200 }} className="convergence-transform-time-chart">
+      <div style={{ height: 420 }} className="convergence-transform-time-chart">
       </div>
     )
   }

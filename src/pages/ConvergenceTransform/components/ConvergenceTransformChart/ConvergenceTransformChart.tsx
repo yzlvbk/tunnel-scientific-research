@@ -54,7 +54,7 @@ class ConvergenceTransformChart extends React.Component<IConvergenceTransformCha
     // 2.配置option
     const option = {
       polar: {
-        radius: 80
+        radius: 140
       },
       angleAxis: {
         clockwise: false, // 逆时针
