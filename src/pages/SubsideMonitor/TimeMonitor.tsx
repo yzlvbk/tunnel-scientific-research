@@ -17,6 +17,7 @@ class SubSideMonitor extends React.Component<{}> {
   // 实时请求数据
   public timeGetData = async () => {
     const data = await reqLeveeTimeTransform() // 3D实时数据
+
     if (data.statusCode !== 200) return
     this.setState({ leveeTimeTransformValue: data.data })
 

@@ -40,7 +40,7 @@ export default class MaxOffsetChart extends Component<IMaxOffsetChartProps> {
   }
 
   public drawMaxOffsetChart = (maxOffsetData: { x: [], y: [], maxLenList: [] }) => {
-    const { x, y } = maxOffsetData
+    const { x, y, maxLenList } = maxOffsetData
 
     // 定义颜色
     var fontColor = "#1890ff"
@@ -57,11 +57,19 @@ export default class MaxOffsetChart extends Component<IMaxOffsetChartProps> {
     const option = {
       color: ['#333'], // 线条颜色
       title: {
-        text: '大堤最大位移图',
+        text: '大堤最大沉降图',
         left: 'center'
       },
       tooltip: {
-        trigger: 'axis'
+        trigger: 'axis',
+        formatter: (params: any) => {
+          return `<div>
+            最大沉降: ${params[0].value}
+            <br>
+            测点位置: E0+${maxLenList[params[0].dataIndex]}
+            </div>
+            `
+        }
       },
       grid: {
         left: '3%',
@@ -96,7 +104,7 @@ export default class MaxOffsetChart extends Component<IMaxOffsetChartProps> {
         }
       },
       yAxis: [{
-        name: '位移(mm)',
+        name: '沉降(mm)',
         type: 'value',
         splitNumber: 5,
         axisLine: {
@@ -140,7 +148,7 @@ export default class MaxOffsetChart extends Component<IMaxOffsetChartProps> {
         }
       ],
       series: [{
-        name: '最大位移',
+        name: '最大沉降',
         type: 'line',
         symbol: 'emptyCircle', // 标记形状
         lineStyle: {
@@ -149,7 +157,7 @@ export default class MaxOffsetChart extends Component<IMaxOffsetChartProps> {
         data: y
       }
       ]
-    };
+    }
 
     // 3.将配置项给实例
     // @ts-ignore
@@ -170,6 +178,8 @@ export default class MaxOffsetChart extends Component<IMaxOffsetChartProps> {
   }
 
   render() {
+    console.log('MaxOffsetChart render')
+
     return (
       <div className={style['max-offset-chart']}></div>
     )

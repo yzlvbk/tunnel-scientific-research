@@ -73,6 +73,8 @@ export default class SubsideSensor extends Component {
   // 传感器信息(5分钟定时请求)
   public getSensorTable = async () => {
     const data = await reqSensorDataTable()
+    console.log(data)
+
     if (!data.isSuccess) return
     const sensorTableData: any[] = []
     data.data.forEach((item: any, index: number) => {

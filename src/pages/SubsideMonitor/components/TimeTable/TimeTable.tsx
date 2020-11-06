@@ -49,6 +49,7 @@ class TimeTable extends React.Component<ITimeTableProps> {
 
   static getDerivedStateFromProps(nextProps: any, prevState: any) {
     const { current, length, increment, preday } = nextProps
+
     const columnsData: User[] = []
 
     if (length) {

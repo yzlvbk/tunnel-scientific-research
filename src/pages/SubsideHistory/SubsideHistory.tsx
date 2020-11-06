@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Card, Tabs, Spin } from 'antd'
+import { Card, Tabs, Spin, Cascader } from 'antd'
 import { reqLevee3DHistory } from '../../request/api'
 import LeveeThreeD from '../../components/LeveeThreeD/LeveeThreeD'
 import RainbowBar from '../../components/rainbowBar/RainbowBar'
@@ -7,6 +7,86 @@ import ZoomSlider from './components/ZoomSlider/ZoomSlider'
 import DatePicker from '../../components/DatePicker/DataPicker'
 import MaxOffsetChart from './components/MaxOffsetChart/MaxOffsetChart'
 import SinglePointChart from './components/SinglePointChart/SinglePointChart'
+import HistoryCharts from './components/HistoryCharts/HistoryCharts'
+
+const cascaderOptions = [
+  {
+    value: '加速度',
+    label: '加速度',
+    children: [
+      {
+        value: 'E0',
+        label: 'E0'
+      },
+      {
+        value: 'E1',
+        label: 'E1'
+      },
+      {
+        value: 'E2',
+        label: 'E2'
+      },
+      {
+        value: 'E3',
+        label: 'E3'
+      },
+      {
+        value: 'E4',
+        label: 'E4'
+      },
+      {
+        value: 'E5',
+        label: 'E5'
+      },
+      {
+        value: 'E6',
+        label: 'E6'
+      },
+      {
+        value: 'E7',
+        label: 'E7'
+      }
+    ]
+  },
+  {
+    value: '倾角',
+    label: '倾角',
+    children: [
+      {
+        value: 'E0',
+        label: 'E0'
+      },
+      {
+        value: 'E1',
+        label: 'E1'
+      },
+      {
+        value: 'E2',
+        label: 'E2'
+      },
+      {
+        value: 'E3',
+        label: 'E3'
+      },
+      {
+        value: 'E4',
+        label: 'E4'
+      },
+      {
+        value: 'E5',
+        label: 'E5'
+      },
+      {
+        value: 'E6',
+        label: 'E6'
+      },
+      {
+        value: 'E7',
+        label: 'E7'
+      }
+    ]
+  }
+]
 
 const { TabPane } = Tabs
 
@@ -18,7 +98,8 @@ export default class SubsideHistory extends React.Component {
     currentTabKey: 'maxOffset',
     tabsDates: ['2020-10-21 10:00:00', '2020-10-21 11:00:00'], // tabs标签选中的日期范围
     spinVisible: false, // 3D请求数据时加载icon
-    selectValuetoSon: 0 // 传给子组件zoomslide的选中值
+    selectValuetoSon: 0, // 传给子组件zoomslide的选中值
+    cascaderSelectValue: ['加速度', 'E0'] // 级联选择器选中值
   }
 
   public async componentDidMount() {
@@ -57,6 +138,12 @@ export default class SubsideHistory extends React.Component {
     this.forceUpdate()
   }
 
+  //* 级联选择器发生变化
+  public cascaderSelectValueChange = (value: any) => {
+    console.log(value)
+    this.setState({ cascaderSelectValue: value })
+  }
+
   // 监听子组件点击最大位移chart
   public clickChart = (name: any) => {
     const { zoomSlideValue } = this.state
@@ -69,7 +156,15 @@ export default class SubsideHistory extends React.Component {
   }
 
   public render() {
-    const { leveeTimeTransformValue, zoomSlideValue, tabsDates, spinVisible, selectValuetoSon, currentTabKey } = this.state
+    const {
+      leveeTimeTransformValue,
+      zoomSlideValue,
+      tabsDates,
+      spinVisible,
+      selectValuetoSon,
+      currentTabKey,
+      cascaderSelectValue
+    } = this.state
 
     console.log('history render')
 
@@ -95,6 +190,17 @@ export default class SubsideHistory extends React.Component {
               <SinglePointChart tabsDates={tabsDates} currentTabKey={currentTabKey} />
             </TabPane>
           </Tabs>
+        </Card>
+
+        <Card title="传感器历史图">
+          <Cascader
+            defaultValue={cascaderSelectValue}
+            options={cascaderOptions}
+            onChange={this.cascaderSelectValueChange}
+            placeholder="Please select"
+            style={{ position: 'absolute', top: '15px', right: 0 }}
+          />
+          <HistoryCharts tabsDates={tabsDates} cascaderSelectValue={cascaderSelectValue} />
         </Card>
       </div>
     );

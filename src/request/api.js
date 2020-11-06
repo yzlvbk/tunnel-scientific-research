@@ -15,6 +15,12 @@ export const reqLeveeHistoryMaxDisp = (startTime, endTime) => http('/levee/GetHi
 /* 历史数据单个测点数据 */
 export const reqLeveeHistorySingle = (startTime, endTime, length) => http('/levee/GetHistorySingle', { startTime, endTime, length }, 'GET')
 
+/* 传感器加速度历史数据 */
+export const reqLeveeHistoryAcclData = (name, startTime, endTime) => http('/levee/GetAcclData', { name, startTime, endTime }, 'GET')
+
+/* 传感器倾角历史数据 */
+export const reqLeveeHistoryIclData = (name, startTime, endTime) => http('/levee/GetIclData', { name, startTime, endTime }, 'GET')
+
 /* 传感器信息 */
 export const reqSensorDataTable = () => http('/levee/GetSensorDataTable', {}, 'GET')
 
@@ -24,8 +30,14 @@ export const reqSensorInfo = () => http('/levee/GetSensorInfo', {}, 'GET')
 /* 收敛变形历史图 */
 export const reqConvergentDeformationTime = (pipeId, startTime, endTime) => http('/convergentDeformationTime', { pipeId, startTime, endTime }, 'POST', true)
 
+
+
+/* —————————————————————————— 隧道接口 —————————————————————————— */
+
 /* 收敛变形专业图 */
 export const reqConvergentDeformationPipe = (pipeId, startTime) => http('/convergentDeformationPipe', { pipeId, startTime }, 'POST', true)
 
 /* 收敛变形传感器信息 */
 export const reqDeformSensorInfo = (ringId) => http('/deform/GetSensorInfo', { ringId }, 'GET')
+
+
