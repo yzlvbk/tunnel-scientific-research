@@ -182,7 +182,7 @@ export default class SubsideHistory extends React.Component {
         <Card>
           <Tabs defaultActiveKey="maxOffset"
             onChange={this.tabsChange}>
-            <TabPane tab="最大位移" key="maxOffset">
+            <TabPane tab="最大沉降" key="maxOffset">
               <MaxOffsetChart tabsDates={tabsDates} clickChart={this.clickChart.bind(this)} currentTabKey={currentTabKey} />
             </TabPane>
 

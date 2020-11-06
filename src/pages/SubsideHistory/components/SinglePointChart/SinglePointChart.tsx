@@ -1,10 +1,10 @@
 import * as React from 'react'
 import * as echarts from 'echarts'
-import { Select } from 'antd'
+import { Input, message } from 'antd'
 import { reqLeveeHistorySingle } from '../../../../request/api'
 import style from '../../style/index.module.less'
 
-const { Option } = Select
+const { Search } = Input
 
 export interface ISinglePointChartProps {
   tabsDates: string[]
@@ -18,17 +18,11 @@ export default class SinglePointChart extends React.Component<ISinglePointChartP
     selectDistance: '0.5' // 单点测点位移，默认0.5m
   }
 
-  public selectDidtanceChange = (value: any) => {
-    console.log(`selected ${value}`)
-    this.setState({ selectDistance: value }, () => {
-      this.startDrawChart()
-    })
-  }
-
   public startDrawChart = async () => {
     const { tabsDates } = this.props
     const { selectDistance } = this.state
     const data = await reqLeveeHistorySingle(tabsDates[0], tabsDates[1], selectDistance)
+
     if (!data.isSuccess) return
     this.drawSinglePointChart(data.data)
   }
@@ -71,7 +65,7 @@ export default class SinglePointChart extends React.Component<ISinglePointChartP
     const option = {
       color: ['#333'], // 线条颜色
       title: {
-        text: `大堤${selectDistance}米点沉降图`,
+        text: `大堤E0+${selectDistance}米处沉降图`,
         left: 'center'
       },
       tooltip: {
@@ -177,18 +171,26 @@ export default class SinglePointChart extends React.Component<ISinglePointChartP
     }, 100);
   }
 
+  public onSearch = (value: string) => {
+
+    const selectDistance = Number(value)
+    if (0 <= selectDistance && selectDistance <= 93) {
+      this.setState({ selectDistance }, () => {
+        this.startDrawChart()
+      })
+    } else {
+      message.error('请输入0 — 93之间有效数字')
+    }
+
+  }
+
   public render() {
     console.log('single-point-chart render')
 
     return (
       <>
         <div>
-          <Select defaultValue="0.5" style={{ width: 120 }} onChange={this.selectDidtanceChange}>
-            <Option value="0.5">0.5m</Option>
-            <Option value="1">1m</Option>
-            <Option value="2">2m</Option>
-            <Option value="5">5m</Option>
-          </Select>
+          <Search placeholder="input search text" defaultValue={0.5} onSearch={this.onSearch} style={{ width: 100 }} />
         </div>
         <div className={style['single-point-chart']}></div>
       </>
