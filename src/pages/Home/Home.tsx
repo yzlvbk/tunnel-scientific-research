@@ -51,7 +51,7 @@ export default class Home extends Component<RouteComponentProps> {
 
     return (
       <Layout className={home.home}>
-        {/* 侧边栏 */}
+        {/* 侧边栏  */}
         <Sider trigger={null} collapsible collapsed={this.state.collapsed}>
           {/* 导航菜单 */}
           <div className={home.sider}>
