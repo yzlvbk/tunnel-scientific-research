@@ -453,10 +453,19 @@ export default class LeveeThreeD extends React.Component<ILeveeThreeDProps, ILev
       this.group.add(sprite)
     }
     const eastTextCanva = createText('东')
-    createSprite(eastTextCanva, -640.5, 100, 5)
+    createSprite(eastTextCanva, -640.5, 200, 15)
 
     const westTextCanva = createText('西')
-    createSprite(westTextCanva, 630.5, 100, 5)
+    createSprite(westTextCanva, 630.5, 200, 15)
+
+    const leveeTextCanva = createText('南岸大堤')
+    createSprite(leveeTextCanva, 10, 200, 15)
+
+    const eastTunnelTextCanva = createText('东线隧道')
+    createSprite(eastTunnelTextCanva, -415, 200, -185)
+
+    const westTunnelTextCanva = createText('西线隧道')
+    createSprite(westTunnelTextCanva, 460, 200, -185)
   }
 
   public initLight = () => {
