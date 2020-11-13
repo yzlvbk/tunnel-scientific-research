@@ -21,6 +21,9 @@ export default class DatePickerComponent extends React.Component<IDatePickerProp
   }
 
   public render() {
+    const startDefaultValue = moment(Number(new Date()) - (24 * 3600 * 1000)) // 默认开始时间
+    const endDefaultValue = moment(new Date())// 默认结束时间
+
     return (
       <div
         style={{
@@ -30,7 +33,8 @@ export default class DatePickerComponent extends React.Component<IDatePickerProp
         }}>
         <Space direction="vertical" size={12}>
           <RangePicker
-            defaultValue={[moment('2020-10-21 10:00'), moment('2020-10-21 11:00')]}
+            allowClear={false}
+            defaultValue={[startDefaultValue, endDefaultValue]}
             showTime={{ format: 'HH:mm' }}
             format="YYYY-MM-DD HH:mm"
             ranges={{

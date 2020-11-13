@@ -31,20 +31,10 @@ export default class ZoomSlider extends Component<Props, State> {
     return zoomSlideValue[value]
   }
 
-  public slideChange = () => {
-    let timer: any
-    return (value: any) => {
-      // 更新自己的selectValue
-      if (this.state.selectValue !== value) {
-        this.setState({ selectValue: value })
-      }
-
-      if (timer) clearTimeout(timer)
-      timer = setTimeout(() => {
-        const { zoomSlideValue, slideChangeFormSon } = this.props
-        slideChangeFormSon(zoomSlideValue[value])
-      }, 500)
-    }
+  public slideChange = (value: any) => {
+    this.setState({ selectValue: value })
+    const { zoomSlideValue, slideChangeFormSon } = this.props
+    slideChangeFormSon(zoomSlideValue[value])
   }
 
   public render() {
@@ -57,7 +47,7 @@ export default class ZoomSlider extends Component<Props, State> {
           value={selectValue}
           tipFormatter={this.formatter}
           max={zoomSlideValue.length - 1}
-          onChange={this.slideChange()}
+          onChange={this.slideChange}
         />
       </div>
     )

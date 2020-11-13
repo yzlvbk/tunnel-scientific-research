@@ -64,6 +64,8 @@ export default class MaxOffsetChart extends Component<IMaxOffsetChartProps> {
         trigger: 'axis',
         formatter: (params: any) => {
           return `<div>
+            时间: ${params[0].name}
+            <br>
             最大沉降: ${params[0].value}
             <br>
             测点位置: E0+${maxLenList[params[0].dataIndex]}
@@ -106,6 +108,7 @@ export default class MaxOffsetChart extends Component<IMaxOffsetChartProps> {
       yAxis: [{
         name: '沉降(mm)',
         type: 'value',
+        max: 20,
         splitNumber: 5,
         axisLine: {
           show: true

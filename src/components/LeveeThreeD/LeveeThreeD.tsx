@@ -13,8 +13,8 @@ var params = {
 };
 var lut = new Lut();
 lut.setColorMap(params.colorMap);
-lut.setMax(5);
-lut.setMin(-10);
+// lut.setMax(5);
+// lut.setMin(-10);
 
 //  动态整合vertices
 var vertices: any[] = []
@@ -254,7 +254,8 @@ const buildBack = (group: any) => {
 }
 
 interface ILeveeThreeDProps {
-  leveeTimeTransformValue: any
+  leveeTimeTransformValue: any,
+  zoom: number // 缩放值
 }
 
 interface ILeveeThreeDState {
@@ -296,10 +297,14 @@ export default class LeveeThreeD extends React.Component<ILeveeThreeDProps, ILev
 
   // 防止重复render
   public shouldComponentUpdate(nextProps: ILeveeThreeDProps, nextState: ILeveeThreeDState) {
-    return this.props.leveeTimeTransformValue !== nextProps.leveeTimeTransformValue || this.state !== nextState
+    return this.props.leveeTimeTransformValue !== nextProps.leveeTimeTransformValue ||
+      this.state !== nextState ||
+      this.props.zoom !== nextProps.zoom
   }
 
   public componentDidUpdate() {
+    lut.setMax(5);
+    lut.setMin(-10);
     //  动态整合vertices
     vertices = []
     for (let i = 0; i < 186; i++) {
@@ -314,11 +319,13 @@ export default class LeveeThreeD extends React.Component<ILeveeThreeDProps, ILev
       vertices.push(new THREE.Vector3(distance, 159, -240))
     }
 
-    const { leveeTimeTransformValue } = this.props
+    const { leveeTimeTransformValue, zoom = 10 } = this.props
+
     for (let i = 0, x = Object.keys(leveeTimeTransformValue).length / 2; i < x; i += 0.5) {
       const index = i * 2
       const distance = (index * 2 - 186) * 3.5
-      const zoomItem = leveeTimeTransformValue[i] / 10 // 将沉降值 / 10
+      // 将沉降值缩放zoom倍
+      const zoomItem = leveeTimeTransformValue[i] / zoom
       if (vertices[(index * 8 + 3)] && vertices[(index * 8 + 4)]) {
         vertices.splice((index * 8 + 3), 1, (new THREE.Vector3(distance, 100, zoomItem)))
         vertices.splice((index * 8 + 4), 1, (new THREE.Vector3(distance, 121, zoomItem)))
@@ -583,6 +590,8 @@ export default class LeveeThreeD extends React.Component<ILeveeThreeDProps, ILev
   }
 
   public render() {
+    console.log('3D render');
+
     return (
       <div className={style['levee-threeD-warp']}>
         {/* <section className={style['three-d-icon']}>

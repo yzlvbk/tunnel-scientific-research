@@ -2,6 +2,7 @@ import * as React from 'react'
 import { Card } from 'antd'
 import { reqLeveeTimeTransform, reqLeveeTimeMaxDispTable } from '../../request/api'
 import LeveeThreeD from '../../components/LeveeThreeD/LeveeThreeD'
+import VerticalZoomSlider from '../../components/verticalZoomSlider/VerticalZoomSlider'
 import RainbowBar from '../../components/rainbowBar/RainbowBar'
 import TimeChart from './components/TimeChart/TimeChart'
 import TimeTable from './components/TimeTable/TimeTable'
@@ -11,7 +12,8 @@ class SubSideMonitor extends React.Component<{}> {
   inervalTimer: any
 
   public state = {
-    leveeTimeTransformValue: {}
+    leveeTimeTransformValue: {},
+    zoomValue: 5 // 沉降大小缩放比例
   }
 
   // 实时请求数据
@@ -44,15 +46,23 @@ class SubSideMonitor extends React.Component<{}> {
     }
   }
 
+  public slideChangeFormSon = (zoomValue: number) => {
+    this.setState({ zoomValue })
+  }
+
 
   public render() {
-    const { leveeTimeTransformValue } = this.state
+    const { leveeTimeTransformValue, zoomValue } = this.state
 
     return (
       <div className="monitor">
         <Card title="大堤实时3D模型" className="three-d-model">
-          <RainbowBar />
-          <LeveeThreeD leveeTimeTransformValue={leveeTimeTransformValue} />
+          <RainbowBar zoom={zoomValue} />
+          <VerticalZoomSlider
+            style={{ position: 'absolute', height: 200, right: 20, top: 105, zIndex: 100 }}
+            slideChangeFormSon={this.slideChangeFormSon.bind(this)}
+          />
+          <LeveeThreeD leveeTimeTransformValue={leveeTimeTransformValue} zoom={zoomValue} />
         </Card>
 
         <Card title="数据曲线图">

@@ -91,6 +91,7 @@ class TimeChart extends React.Component<ITimeChartProps> {
       yAxis: [{
         name: '沉降(mm)',
         type: 'value',
+        max: 20,
         splitNumber: 5,
         axisLine: {
           show: true
@@ -121,6 +122,7 @@ class TimeChart extends React.Component<ITimeChartProps> {
           realtime: true,
           start: 0,
           end: 100,
+          minSpan: 50
         },
         // y轴滚动条
         {
@@ -130,6 +132,7 @@ class TimeChart extends React.Component<ITimeChartProps> {
           start: 0,
           end: 100,
           yAxisIndex: 0,
+          minSpan: 50
         }
       ],
       series: [{
