@@ -15,7 +15,7 @@ export default class HistoryCharts extends Component<IProps> {
     if (cascaderSelectValue[0] === '加速度') {
       this.startDrawAccl(cascaderSelectValue[1], tabsDates[0], tabsDates[1])
     } else if (cascaderSelectValue[0] === '倾角') {
-      this.startDrawAccl(cascaderSelectValue[1], tabsDates[0], tabsDates[1])
+      this.startDrawIcl(cascaderSelectValue[1], tabsDates[0], tabsDates[1])
     }
   }
 
@@ -29,7 +29,7 @@ export default class HistoryCharts extends Component<IProps> {
     if (cascaderSelectValue[0] === '加速度') {
       this.startDrawAccl(cascaderSelectValue[1], tabsDates[0], tabsDates[1])
     } else if (cascaderSelectValue[0] === '倾角') {
-      this.startDrawAccl(cascaderSelectValue[1], tabsDates[0], tabsDates[1])
+      this.startDrawIcl(cascaderSelectValue[1], tabsDates[0], tabsDates[1])
     }
   }
 
@@ -39,8 +39,8 @@ export default class HistoryCharts extends Component<IProps> {
     this.drawHistoryAcclChart(data.data)
   }
   // 执行绘制倾角
-  public startDrawIcl = async () => {
-    const data2 = await reqLeveeHistoryIclData('E0', '2020-10-21 10:00:00', '2020-10-21 11:00:00')
+  public startDrawIcl = async (name: string, startTime: string, endTime: string) => {
+    const data2 = await reqLeveeHistoryIclData(name, startTime, endTime)
     this.drawHistoryIclChart(data2.data)
   }
 
@@ -180,6 +180,7 @@ export default class HistoryCharts extends Component<IProps> {
           realtime: true,
           start: 0,
           end: 100,
+          minSpan: 50
         },
         // y轴滚动条
         {
@@ -189,6 +190,7 @@ export default class HistoryCharts extends Component<IProps> {
           start: 0,
           end: 100,
           yAxisIndex: 0,
+          minSpan: 50
         }
       ],
       series
@@ -327,6 +329,7 @@ export default class HistoryCharts extends Component<IProps> {
           realtime: true,
           start: 0,
           end: 100,
+          minSpan: 50
         },
         // y轴滚动条
         {
@@ -336,6 +339,7 @@ export default class HistoryCharts extends Component<IProps> {
           start: 0,
           end: 100,
           yAxisIndex: 0,
+          minSpan: 50
         }
       ],
       series

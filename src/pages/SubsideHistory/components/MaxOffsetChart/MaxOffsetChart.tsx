@@ -136,6 +136,7 @@ export default class MaxOffsetChart extends Component<IMaxOffsetChartProps> {
           realtime: true,
           start: 0,
           end: 100,
+          minSpan: 50
         },
         // y轴滚动条
         {
@@ -145,6 +146,7 @@ export default class MaxOffsetChart extends Component<IMaxOffsetChartProps> {
           start: 0,
           end: 100,
           yAxisIndex: 0,
+          minSpan: 50
         }
       ],
       series: [{

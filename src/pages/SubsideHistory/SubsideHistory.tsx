@@ -194,6 +194,7 @@ export default class SubsideHistory extends React.Component {
 
         <Card title="传感器历史图">
           <Cascader
+            allowClear={false}
             defaultValue={cascaderSelectValue}
             options={cascaderOptions}
             onChange={this.cascaderSelectValueChange}
